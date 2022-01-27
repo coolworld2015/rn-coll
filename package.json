@@ -1,0 +1,44 @@
+{
+  "name": "AwesomeProject",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@react-native-community/cameraroll": "^1.7.1",
+    "@react-native-community/masked-view": "^0.1.7",
+    "@react-native-masked-view/masked-view": "^0.2.6",
+    "@react-navigation/bottom-tabs": "^5.1.1",
+    "@react-navigation/material-bottom-tabs": "^5.1.1",
+    "@react-navigation/material-top-tabs": "^5.1.1",
+    "@react-navigation/native": "^5.9.8",
+    "@react-navigation/stack": "^5.14.9",
+    "react": "17.0.2",
+    "react-native": "0.67.1",
+    "react-native-gesture-handler": "^1.6.0",
+    "react-native-paper": "^3.6.0",
+    "react-native-reanimated": "^1.7.0",
+    "react-native-safe-area-context": "^0.7.3",
+    "react-native-screens": "^2.2.0",
+    "react-native-tab-view": "^2.13.0",
+    "react-native-vector-icons": "^6.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/runtime": "^7.16.7",
+    "@react-native-community/eslint-config": "^3.0.1",
+    "babel-jest": "^27.4.6",
+    "eslint": "^8.7.0",
+    "jest": "^27.4.7",
+    "metro-react-native-babel-preset": "^0.66.2",
+    "react-test-renderer": "17.0.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
