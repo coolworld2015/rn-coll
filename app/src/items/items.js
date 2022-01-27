@@ -30,7 +30,7 @@ const Audit = ({navigation}) => {
     }, []);
 
     const getItems = () => {
-        console.log('Key....... ', state.token);
+        //console.log('Key....... ', state.token);
         fetch(state.url + 'api/items1/get', {
             method: 'get',
             headers: {
@@ -42,7 +42,7 @@ const Audit = ({navigation}) => {
             .then((response) => response.json())
             .then(items => {
                 //setItems(items.sort(sort));
-                setFilteredItems(items);
+                setFilteredItems(items.slice(0, 20));
                 setRecords(items.length);
                 setShowProgress(false);
             })
