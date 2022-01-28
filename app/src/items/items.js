@@ -30,8 +30,10 @@ const Audit = ({navigation}) => {
     }, []);
 
     const getItems = () => {
-        //console.log('Key....... ', state.token);
-        fetch(state.url + 'api/items1/get', {
+        setShowProgress(true);
+        setServerError(false);
+
+        fetch(state.url + 'api/pic/get', {
             method: 'get',
             headers: {
                 'Accept': 'application/json',
@@ -41,8 +43,34 @@ const Audit = ({navigation}) => {
         })
             .then((response) => response.json())
             .then(items => {
-                //setItems(items.sort(sort));
+                setItems(items.sort(sort));
                 setFilteredItems(items.slice(0, 20));
+                setRecords(items.length);
+                setShowProgress(false);
+                setTimeout(() => {
+                    getItemsAll();
+                }, 100)
+            })
+            .catch((error) => {
+                console.log('error ', error);
+                setShowProgress(false);
+                setServerError(true);
+            });
+    };
+
+    const getItemsAll = () => {
+        fetch(state.url + 'api/pic/getall', {
+            method: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': state.token,
+            },
+        })
+            .then((response) => response.json())
+            .then(items => {
+                setItems(items.sort(sort));
+                setFilteredItems(items);
                 setRecords(items.length);
                 setShowProgress(false);
             })
