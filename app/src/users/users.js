@@ -2,27 +2,22 @@
 
 import React, {useContext, useEffect, useState} from 'react';
 import {
-    ActivityIndicator,
-    Dimensions,
-    FlatList,
-    Image,
-    RefreshControl,
     StyleSheet,
     Text,
-    TextInput,
+    View,
     TouchableHighlight,
     TouchableWithoutFeedback,
-    View,
-    Platform,
-    PermissionsAndroid,
+    ActivityIndicator,
+    TextInput,
+    Image,
+    Dimensions, FlatList, RefreshControl,
 } from 'react-native';
 
 import {AppConfig} from '../app/app';
 import {useNavigation} from '@react-navigation/core';
-import CameraRoll from '@react-native-community/cameraroll';
 
-const Photos = ({navigation}) => {
-    const {dispatch} = useContext(AppConfig);
+const Users = ({navigation}) => {
+    const {state, dispatch} = useContext(AppConfig);
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
@@ -31,47 +26,42 @@ const Photos = ({navigation}) => {
     const [showProgress, setShowProgress] = useState(true);
 
     useEffect(() => {
-        if (Platform.OS === 'android') {
-            console.log('Android');
-            requestPhotosPermission()
-        } else {
-            console.log('ios');
-            getItems();
-        }
+        getItems();
     }, []);
 
-    const requestPhotosPermission = () => {
-        PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then((result) => {
-            if (result === PermissionsAndroid.RESULTS.GRANTED) {
-                getItems();
-                console.log('Photos permission GRANTED');
-            } else {
-                console.log('Photos permission denied');
-            }
-        })
-            .catch((err) => {
-                console.log('error ', error);
-            })
-    };
-
     const getItems = () => {
-        console.log('ios');
-        CameraRoll.getPhotos({
-            first: 2000,
-            assetType: 'All',
+        console.log('Key....... ', state.token);
+        fetch(state.url + 'api/users/get', {
+            method: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': state.token,
+            },
         })
+            .then((response) => response.json())
             .then(items => {
-                console.log(items.edges);
-                setItems(items.edges);
-                setFilteredItems(items.edges);
-                setRecords(items.edges.length);
+                setItems(items.sort(sort));
+                setFilteredItems(items);
+                setRecords(items.length);
                 setShowProgress(false);
             })
-            .catch((err) => {
+            .catch((error) => {
                 console.log('error ', error);
                 setShowProgress(false);
                 setServerError(true);
             });
+    };
+
+    const sort = (a, b) => {
+        let nameA = a.name, nameB = b.name;
+        if (nameA > nameB) {
+            return 1;
+        }
+        if (nameA < nameB) {
+            return -1;
+        }
+        return 0;
     };
 
     const refreshData = () => {
@@ -85,7 +75,7 @@ const Photos = ({navigation}) => {
     const onChangeText = (text) => {
         let arr = [].concat(filteredItems);
 
-        let filteredItems1 = arr.filter((el) => el.node.image.filename.toLowerCase().indexOf(text.toLowerCase()) !== -1);
+        let filteredItems1 = arr.filter((el) => el.name.toLowerCase().indexOf(text.toLowerCase()) !== -1);
         setItems(filteredItems1);
         setRecords(filteredItems1.length);
         setSearchQuery(text);
@@ -143,7 +133,7 @@ const Photos = ({navigation}) => {
                     <TouchableWithoutFeedback>
                         <View>
                             <Text style={styles.textLarge}>
-                                Photos
+                                Users
                             </Text>
                         </View>
                     </TouchableWithoutFeedback>
@@ -191,8 +181,9 @@ const Photos = ({navigation}) => {
                 renderItem={({item}) => (
                     <Item
                         id={item.id}
-                        name={item.node.timestamp}
-                        image={item.node.image.uri}
+                        name={item.name}
+                        pass={item.pass}
+                        description={item.description}
                         data={{item}}
                         navigation={navigation}
                     />
@@ -221,18 +212,6 @@ const Photos = ({navigation}) => {
     );
 };
 
-const timeConverter = (UNIX_timestamp) => {
-    let a = new Date(UNIX_timestamp * 1000);
-    let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    let year = a.getFullYear();
-    let month = months[a.getMonth()];
-    let date = a.getDate();
-    let hour = a.getHours() < 10 ? '0' + a.getHours() : a.getHours();
-    let min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes();
-    let sec = a.getSeconds() < 10 ? '0' + a.getSeconds() : a.getSeconds();
-    return date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec;
-};
-
 const Item = (item) => {
     const {dispatch} = useContext(AppConfig);
     const navigation = useNavigation();
@@ -247,15 +226,8 @@ const Item = (item) => {
             underlayColor='#ddd'>
             <View style={styles.row}>
                 <Text style={styles.rowText}>
-                    {timeConverter(item.name)}
+                    {item.name} - {item.pass} - {item.description}
                 </Text>
-                <Image
-                    style={{
-                        width: 300,
-                        height: 200,
-                    }}
-                    source={{uri: item.image}}
-                />
             </View>
         </TouchableHighlight>
     );
@@ -266,6 +238,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         backgroundColor: 'white',
+        marginTop: 50,
     },
     iconForm: {
         flexDirection: 'row',
@@ -325,8 +298,8 @@ const styles = StyleSheet.create({
     },
     row: {
         flex: 1,
-        //flexDirection: 'row',
-        padding: 10,
+        flexDirection: 'row',
+        padding: 20,
         alignItems: 'center',
         borderColor: '#D7D7D7',
         borderBottomWidth: 1,
@@ -362,4 +335,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Photos;
+export default Users;

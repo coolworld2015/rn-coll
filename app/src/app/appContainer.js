@@ -19,8 +19,8 @@ import ItemDetails from '../items/itemDetails';
 
 import Photos from '../photos/photos';
 
-import Phones from '../phones/phones';
-import PhonesDetails from '../phones/phoneDetails';
+import Users from '../users/users';
+import UserDetails from '../users/userDetails';
 
 import Audit from '../audit/audit';
 import AuditDetails from '../audit/auditDetails';
@@ -53,14 +53,25 @@ const ItemsStackScreen = () => {
     );
 };
 
-const PhonesStack = createStackNavigator();
+const SearchStack = createStackNavigator();
 
-const PhonesStackScreen = () => {
+const SearchStackScreen = () => {
     return (
-        <PhonesStack.Navigator headerMode={'none'}>
-            <PhonesStack.Screen name="Phones" component={Phones} options={{title: ''}}/>
-            <PhonesStack.Screen name="Details" component={PhonesDetails} options={{title: '', headerLeft: null}}/>
-        </PhonesStack.Navigator>
+        <SearchStack.Navigator headerMode={'none'}>
+            <SearchStack.Screen name="Items" component={Items} options={{title: ''}}/>
+            <SearchStack.Screen name="Details" component={ItemDetails} options={{title: '', headerLeft: null}}/>
+        </SearchStack.Navigator>
+    );
+};
+
+const UsersStack = createStackNavigator();
+
+const UsersStackScreen = () => {
+    return (
+        <UsersStack.Navigator headerMode={'none'}>
+            <UsersStack.Screen name="Users" component={Users} options={{title: ''}}/>
+            <UsersStack.Screen name="Details" component={UserDetails} options={{title: '', headerLeft: null}}/>
+        </UsersStack.Navigator>
     );
 };
 
@@ -72,6 +83,16 @@ const AuditStackScreen = () => {
             <AuditStack.Screen name="Audit" component={Audit} options={{title: ''}}/>
             <AuditStack.Screen name="Details" component={AuditDetails} options={{title: '', headerLeft: null}}/>
         </AuditStack.Navigator>
+    );
+};
+
+const PhotosStack = createStackNavigator();
+
+const PhotosStackScreen = () => {
+    return (
+        <PhotosStack.Navigator headerMode={'none'}>
+            <PhotosStack.Screen name="Photos" component={Photos} options={{title: ''}}/>
+        </PhotosStack.Navigator>
     );
 };
 
@@ -94,7 +115,7 @@ const AppContainer = () => {
         //activeBackgroundColor: 'darkblue',
     };
 
-    const name = 'Phones';
+    const name = 'Users';
     const MyTheme = {
         dark: false,
         colors: {
@@ -137,6 +158,27 @@ const AppContainer = () => {
                             />;
                         }
 
+                        if (route.name === 'Search') {
+                            iconName = <Image
+                                source={require('../../img/search.png')}
+                                style={{
+                                    height: 20,
+                                    width: 20,
+                                    margin: 0,
+                                }}
+                            />;
+                        }
+                        if (route.name === 'Search' && focused) {
+                            iconName = <Image
+                                source={require('../../img/search.png')}
+                                style={{
+                                    height: 30,
+                                    width: 30,
+                                    margin: 0,
+                                }}
+                            />;
+                        }
+
                         if (route.name === 'Photos') {
                             iconName = <Image
                                 source={require('../../img/images.png')}
@@ -158,9 +200,9 @@ const AppContainer = () => {
                             />;
                         }
 
-                        if (route.name === 'Phones') {
+                        if (route.name === 'Users') {
                             iconName = <Image
-                                source={require('../../img/phones.png')}
+                                source={require('../../img/users.png')}
                                 style={{
                                     height: 15,
                                     width: 15,
@@ -168,9 +210,9 @@ const AppContainer = () => {
                                 }}
                             />;
                         }
-                        if (route.name === 'Phones' && focused) {
+                        if (route.name === 'Users' && focused) {
                             iconName = <Image
-                                source={require('../../img/phones.png')}
+                                source={require('../../img/users.png')}
                                 style={{
                                     height: 30,
                                     width: 30,
@@ -215,9 +257,10 @@ const AppContainer = () => {
                 })}
             >
                 <Tab.Screen name="Items" component={ItemsStackScreen}/>
+                <Tab.Screen name="Search" component={SearchStackScreen}/>
                 <Tab.Screen name="Audit" component={AuditStackScreen}/>
-                <Tab.Screen name="Photos" component={Photos}/>
-                <Tab.Screen name={name} component={PhonesStackScreen}/>
+                <Tab.Screen name="Photos" component={PhotosStackScreen}/>
+                <Tab.Screen name={name} component={UsersStackScreen}/>
 
                 <Tab.Screen name="Quit" component={LogOut}/>
             </Tab.Navigator>

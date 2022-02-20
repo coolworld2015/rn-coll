@@ -82,7 +82,7 @@ const Audit = ({navigation}) => {
     };
 
     const sort = (a, b) => {
-        let nameA = a.id, nameB = b.id;
+        let nameA = parseInt(a.id), nameB = parseInt(b.id);
         if (nameA > nameB) {
             return -1;
         }

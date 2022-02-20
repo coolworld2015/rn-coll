@@ -183,6 +183,7 @@ const Audit = ({navigation}) => {
                         id={item.id}
                         name={item.name}
                         date={item.date}
+                        description={item.description}
                         data={{item}}
                         navigation={navigation}
                     />
@@ -225,7 +226,7 @@ const Item = (item) => {
             underlayColor='#ddd'>
             <View style={styles.row}>
                 <Text style={styles.rowText}>
-                    {item.name} - {item.date}
+                    {item.name} - {item.date} - {item.description}
                 </Text>
             </View>
         </TouchableHighlight>

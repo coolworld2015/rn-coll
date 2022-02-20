@@ -80,7 +80,7 @@ const Login = () => {
 
                     <View style={styles.headerContainer}>
                         <Text style={styles.heading}>
-                            RN-Demo
+                            Gredunov's Collection
                         </Text>
                     </View>
 
