@@ -40,13 +40,13 @@ const Login = () => {
         }
 
         setShowProgress(true);
-
+        console.log('name ', name);
         fetch(state.url + 'api/login', {
             method: 'post',
             body: JSON.stringify({
                 name,
                 pass,
-                description: 'Android',
+                description: 'iOS',
             }),
             headers: {
                 'Accept': 'application/json',

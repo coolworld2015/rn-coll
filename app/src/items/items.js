@@ -48,7 +48,7 @@ const Audit = ({navigation}) => {
                 setRecords(items.length);
                 setShowProgress(false);
                 setTimeout(() => {
-                    getItemsAll();
+                    //getItemsAll();
                 }, 100)
             })
             .catch((error) => {
