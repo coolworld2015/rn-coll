@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {useReducer} from 'react';
+import React, {useReducer, useState} from 'react';
 
 import Login from './login';
 import AppContainer from './appContainer';
@@ -40,17 +40,25 @@ export const reducer = (state = {}, action) => {
 };
 
 export const AppConfig = React.createContext();
+export const AppContext = React.createContext();
 
 const App = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
+    const [item, setItem] = useState(initialState);
+    const setContextItem = ((item) => {
+        return setItem(item);
+    });
+
     return (
-        <AppConfig.Provider value={{state, dispatch}}>
-            {state.isLoggedIn
-                ? <AppContainer/>
-                : <Login/>
-            }
-        </AppConfig.Provider>
+        <AppContext.Provider value={{item, setContextItem}}>
+            <AppConfig.Provider value={{state, dispatch}}>
+                {state.isLoggedIn
+                    ? <AppContainer/>
+                    : <Login/>
+                }
+            </AppConfig.Provider>
+        </AppContext.Provider>
     );
 
 };

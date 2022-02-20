@@ -12,16 +12,16 @@ import {
 } from 'react-native';
 
 import {useNavigation} from '@react-navigation/core';
-import {AppConfig} from '../app/app';
+import {AppConfig, AppContext} from '../app/app';
 
 const PhoneDetails = () => {
-    const {state} = useContext(AppConfig);
+    const {item} = useContext(AppContext);
     const navigation = useNavigation();
 
     const goBack = () => {
         navigation.goBack();
     };
-console.log(state.item.data.item)
+console.log('AppContextDetails - ', item.data.name)
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -40,7 +40,7 @@ console.log(state.item.data.item)
                     <TouchableWithoutFeedback>
                         <View>
                             <Text style={styles.textLarge}>
-                                {state.item.data.item.name}
+                                {item.data.name}
                             </Text>
                         </View>
                     </TouchableWithoutFeedback>
@@ -61,7 +61,7 @@ console.log(state.item.data.item)
 
                         <View style={styles.itemWrap}>
                             <Image
-                            source={{uri: state.item.data.item.pic}}
+                            source={{uri: item.data.pic}}
                             resizeMode='stretch'
                             style={styles.img}
                         />
@@ -74,7 +74,7 @@ console.log(state.item.data.item)
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {state.item.data.item.id}
+                                {item.data.id}
                             </Text>
                         </View>
                     </View>
@@ -85,7 +85,7 @@ console.log(state.item.data.item)
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {state.item.data.item.name}
+                                {item.data.name}
                             </Text>
                         </View>
                     </View>
@@ -96,7 +96,7 @@ console.log(state.item.data.item)
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {state.item.data.item.category}
+                                {item.data.category}
                             </Text>
                         </View>
                     </View>
@@ -107,7 +107,7 @@ console.log(state.item.data.item)
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {state.item.data.item.group}
+                                {item.data.group}
                             </Text>
                         </View>
                     </View>
@@ -118,7 +118,7 @@ console.log(state.item.data.item)
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {state.item.data.item.description}
+                                {item.data.description}
                             </Text>
                         </View>
                     </View>

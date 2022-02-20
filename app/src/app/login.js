@@ -14,10 +14,12 @@ import {
     KeyboardAvoidingView,
 } from 'react-native';
 
-import {AppConfig} from './app';
+import {AppConfig, AppContext} from './app';
 
 const Login = () => {
     const {state, dispatch} = useContext(AppConfig);
+    const {item, setContextItem} = useContext(AppContext);
+console.log('AppContext - ', item)
     const [showProgress, setShowProgress] = useState(false);
     const [badCredentials, setBadCredentials] = useState(false);
     const [name, setName] = useState('1');
@@ -41,7 +43,7 @@ const Login = () => {
 
         setShowProgress(true);
         console.log('name ', name);
-        fetch(state.url + 'api/login', {
+        fetch(item.url + 'api/login', {
             method: 'post',
             body: JSON.stringify({
                 name,
@@ -58,6 +60,7 @@ const Login = () => {
                 console.log('SET_TOKEN ', responseData);
                 if (responseData.token) {
                     dispatch({type: 'SET_TOKEN', data: responseData.token});
+                    setContextItem({...item,...{token: responseData.token}});
                     setBadCredentials(false);
                     dispatch({type: 'SET_IS_LOGGED_IN'});
                 } else {
@@ -155,179 +158,6 @@ const Login = () => {
         </ScrollView>
     );
 };
-
-/*class Login extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            showProgress: false,
-            username: 'ed',
-            password: '1314',
-            bugANDROID: '',
-            width: Dimensions.get('window').width
-        }
-    }
-
-	componentDidMount() {
-		appConfig.socket.name = this.state.username;
-		this.setState({
-			width: Dimensions.get('window').width
-        });
-	}
-
-    onLogin() {
-        if (this.state.username === undefined || this.state.username === '' ||
-            this.state.password === undefined || this.state.password === '') {
-            this.setState({
-                badCredentials: true
-            });
-            return;
-        }
-
-        this.setState({
-            showProgress: true,
-			badCredentials: false,
-            bugANDROID: ' '
-        });
-
-        var url = appConfig.url;
-
-        fetch(appConfig.url + 'api/login', {
-            method: 'post',
-            body: JSON.stringify({
-                name: this.state.username,
-                pass: this.state.password,
-                description: 'Android'
-            }),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-            .then((response) => response.json())
-            .then((responseData) => {
-				console.log(responseData);
-                if (responseData.token) {
-                    appConfig.access_token = responseData.token;
-					appConfig.socket.name = this.state.username;
-                    this.setState({
-                        badCredentials: false
-                    });
-                    window.appConfig.onLogin();
-                } else {
-                    this.setState({
-                        badCredentials: true,
-                        showProgress: false
-                    });
-                }
-            })
-            .catch((error) => {
-				console.log(responseData);
-                this.setState({
-                    badCredentials: true,
-                    showProgress: false
-                });
-            })
-    }
-
-    render() {
-        let errorCtrl;
-
-        if (this.state.badCredentials) {
-            errorCtrl = <Text style={styles.error}>
-                That username and password combination did not work
-            </Text>;
-        }
-
-        return (
-            <ScrollView style={{backgroundColor: 'whitesmoke'}} keyboardShouldPersistTaps='always'>
-                <KeyboardAvoidingView behavior="padding" enabled>
-                <View style={styles.container}>
-
-                    <View style={styles.headerContainer}>
-                        <Text style={styles.heading}>
-                            RN-Demo
-                        </Text>
-                    </View>
-
-					<Image style={styles.logo}
-                           source={require('../../img/logo.jpg')}
-                    />
-
-                    <TextInput
-                        underlineColorAndroid='rgba(0,0,0,0)'
-                        onChangeText={(text) => this.setState({
-                            username: text,
-                            badCredentials: false
-                        })}
-                        style={{
-                            height: 50,
-                            width: this.state.width * .90,
-                            marginTop: 10,
-                            padding: 4,
-                            fontSize: 18,
-                            borderWidth: 1,
-                            borderColor: 'lightgray',
-                            borderRadius: 5,
-                            color: 'black',
-                            backgroundColor: 'white'
-                        }}
-                        value={this.state.username}
-                        placeholder='Login'>
-                    </TextInput>
-
-                    <TextInput
-                        underlineColorAndroid='rgba(0,0,0,0)'
-                        onChangeText={(text) => this.setState({
-                            password: text,
-                            badCredentials: false
-                        })}
-                        style={{
-                            height: 50,
-                            width: this.state.width * .90,
-                            marginTop: 10,
-                            padding: 4,
-                            fontSize: 18,
-                            borderWidth: 1,
-                            borderColor: 'lightgray',
-                            borderRadius: 5,
-                            color: 'black',
-                            backgroundColor: 'white'
-                        }}
-                        value={this.state.password}
-                        placeholder='Password'
-                        secureTextEntry={true}>
-                    </TextInput>
-
-                    <TouchableHighlight
-                        onPress={() => this.onLogin()}
-                        style={styles.button}>
-                        <Text style={styles.buttonText}>
-                            Log in
-                        </Text>
-                    </TouchableHighlight>
-
-                    {errorCtrl}
-
-                    <ActivityIndicator
-                        animating={this.state.showProgress}
-                        size="large"
-						color="darkblue"
-                        style={styles.loader}
-                    />
-
-                    <Text>{this.state.bugANDROID}</Text>
-                </View>
-                </KeyboardAvoidingView>
-            </ScrollView>
-        )
-    }
-
-    onLoginPressed() {
-        this.props.onLogin();
-    }
-}*/
 
 const styles = StyleSheet.create({
     container: {

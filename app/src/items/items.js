@@ -13,11 +13,12 @@ import {
     Dimensions, FlatList, RefreshControl,
 } from 'react-native';
 
-import {AppConfig} from '../app/app';
+import {AppContext} from '../app/app';
 import {useNavigation} from '@react-navigation/core';
 
-const Audit = ({navigation}) => {
-    const {state, dispatch} = useContext(AppConfig);
+const Items = ({navigation}) => {
+    const {item, setContextItem} = useContext(AppContext);
+
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
@@ -33,12 +34,12 @@ const Audit = ({navigation}) => {
         setShowProgress(true);
         setServerError(false);
 
-        fetch(state.url + 'api/pic/get', {
+        fetch(item.url + 'api/pic/get', {
             method: 'get',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': state.token,
+                'Authorization': item.token,
             },
         })
             .then((response) => response.json())
@@ -59,12 +60,12 @@ const Audit = ({navigation}) => {
     };
 
     const getItemsAll = () => {
-        fetch(state.url + 'api/pic/getall', {
+        fetch(item.url + 'api/pic/getall', {
             method: 'get',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': state.token,
+                'Authorization': item.token,
             },
         })
             .then((response) => response.json())
@@ -230,7 +231,7 @@ const Audit = ({navigation}) => {
             />
 
             <View>
-                <TouchableWithoutFeedback onPress={() => dispatch({type: 'INCREASE_COUNTER'})}>
+                <TouchableWithoutFeedback>
                     <View>
                         <Text style={styles.countFooter}>
                             Records: {records}
@@ -243,13 +244,13 @@ const Audit = ({navigation}) => {
 };
 
 const Item = (item) => {
-    const {dispatch} = useContext(AppConfig);
+    const {setContextItem} = useContext(AppContext);
     const navigation = useNavigation();
 
     return (
         <TouchableHighlight
             onPress={() => {
-                dispatch({type: 'SET_ITEM', data: item});
+                setContextItem({...item,...{data: item}});
                 navigation.navigate('Details');
             }
             }
@@ -375,4 +376,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Audit;
+export default Items;
