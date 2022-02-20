@@ -55,10 +55,8 @@ const Photos = ({navigation}) => {
     };
 
     const getItems = () => {
-        console.log('ios');
         CameraRoll.getPhotos({
-            first: 2000,
-            assetType: 'All',
+            first: 2000
         })
             .then(items => {
                 console.log(items.edges);
