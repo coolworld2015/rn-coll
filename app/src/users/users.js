@@ -13,11 +13,11 @@ import {
     Dimensions, FlatList, RefreshControl,
 } from 'react-native';
 
-import {AppConfig} from '../app/app';
+import {AppConfig, AppContext} from '../app/app';
 import {useNavigation} from '@react-navigation/core';
 
 const Users = ({navigation}) => {
-    const {state, dispatch} = useContext(AppConfig);
+    const {item, setContextItem} = useContext(AppContext);
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
@@ -30,13 +30,13 @@ const Users = ({navigation}) => {
     }, []);
 
     const getItems = () => {
-        console.log('Key....... ', state.token);
-        fetch(state.url + 'api/users/get', {
+        console.log('Key....... ', item.token);
+        fetch(item.url + 'api/users/get', {
             method: 'get',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': state.token,
+                'Authorization': item.token,
             },
         })
             .then((response) => response.json())
@@ -212,21 +212,23 @@ const Users = ({navigation}) => {
     );
 };
 
-const Item = (item) => {
-    const {dispatch} = useContext(AppConfig);
+const Item = (items) => {
+    //const {dispatch} = useContext(AppConfig);
+    const {item, setContextItem} = useContext(AppContext);
     const navigation = useNavigation();
-
+console.log()
     return (
         <TouchableHighlight
             onPress={() => {
-                dispatch({type: 'SET_ITEM', data: item});
+                //dispatch({type: 'SET_ITEM', data: item});
+                setContextItem({...item,...{item: items}});
                 navigation.navigate('Details');
             }
             }
             underlayColor='#ddd'>
             <View style={styles.row}>
                 <Text style={styles.rowText}>
-                    {item.name} - {item.pass} - {item.description}
+                    {items.name} - {items.pass} - {items.description}
                 </Text>
             </View>
         </TouchableHighlight>

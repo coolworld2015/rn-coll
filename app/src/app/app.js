@@ -1,4 +1,5 @@
 'use strict';
+console.disableYellowBox = true;
 
 import React, {useReducer, useState} from 'react';
 
@@ -53,7 +54,7 @@ const App = () => {
     return (
         <AppContext.Provider value={{item, setContextItem}}>
             <AppConfig.Provider value={{state, dispatch}}>
-                {state.isLoggedIn
+                {item.isLoggedIn
                     ? <AppContainer/>
                     : <Login/>
                 }

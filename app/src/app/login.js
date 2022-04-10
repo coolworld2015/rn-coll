@@ -17,7 +17,7 @@ import {
 import {AppConfig, AppContext} from './app';
 
 const Login = () => {
-    const {state, dispatch} = useContext(AppConfig);
+    //const {state, dispatch} = useContext(AppConfig);
     const {item, setContextItem} = useContext(AppContext);
 console.log('AppContext - ', item)
     const [showProgress, setShowProgress] = useState(false);
@@ -59,10 +59,10 @@ console.log('AppContext - ', item)
             .then((responseData) => {
                 console.log('SET_TOKEN ', responseData);
                 if (responseData.token) {
-                    dispatch({type: 'SET_TOKEN', data: responseData.token});
-                    setContextItem({...item,...{token: responseData.token}});
+                    //dispatch({type: 'SET_TOKEN', data: responseData.token});
+                    setContextItem({...item,...{token: responseData.token, isLoggedIn: true}});
                     setBadCredentials(false);
-                    dispatch({type: 'SET_IS_LOGGED_IN'});
+                    //dispatch({type: 'SET_IS_LOGGED_IN'});
                 } else {
                     this.setState({
                         badCredentials: true,

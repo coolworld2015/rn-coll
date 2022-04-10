@@ -13,11 +13,12 @@ import {
     Dimensions, FlatList, RefreshControl,
 } from 'react-native';
 
-import {AppConfig} from '../app/app';
+import {AppConfig, AppContext} from '../app/app';
 import {useNavigation} from '@react-navigation/core';
 
 const Audit = ({navigation}) => {
     const {state, dispatch} = useContext(AppConfig);
+    const {item, setContextItem} = useContext(AppContext);
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
@@ -31,12 +32,12 @@ const Audit = ({navigation}) => {
 
     const getItems = () => {
         console.log('Key....... ', state.token);
-        fetch(state.url + 'api/audit/get', {
+        fetch(item.url + 'api/audit/get', {
             method: 'get',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': state.token,
+                'Authorization': item.token,
             },
         })
             .then((response) => response.json())

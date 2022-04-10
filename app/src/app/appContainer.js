@@ -12,7 +12,7 @@ import {useNavigation} from '@react-navigation/core';
 
 import {Image, Platform} from 'react-native';
 
-import {AppConfig} from './app';
+import {AppConfig, AppContext} from './app';
 
 import Items from '../items/items';
 import ItemDetails from '../items/itemDetails';
@@ -26,15 +26,17 @@ import Audit from '../audit/audit';
 import AuditDetails from '../audit/auditDetails';
 
 const LogOut = () => {
-    const {dispatch} = useContext(AppConfig);
+    //const {dispatch} = useContext(AppConfig);
     const navigation = useNavigation();
+    const {item, setContextItem} = useContext(AppContext);
 
     useEffect(() => {
         const didFocusListener = navigation.addListener(
             'focus',
             () => {
-                console.log('Focused on Quit')
-                dispatch({type: 'SET_IS_LOGGED_OUT'});
+                console.log('Focused on Quit');
+                setContextItem({...item,...{isLoggedIn: false}});
+                //dispatch({type: 'SET_IS_LOGGED_OUT'});
             },
         );
     }, []);
