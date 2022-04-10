@@ -22,7 +22,7 @@ import {useNavigation} from '@react-navigation/core';
 import CameraRoll from '@react-native-community/cameraroll';
 
 const Photos = ({navigation}) => {
-    const {dispatch} = useContext(AppConfig);
+    //const {dispatch} = useContext(AppConfig);
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
@@ -208,7 +208,7 @@ const Photos = ({navigation}) => {
             />
 
             <View>
-                <TouchableWithoutFeedback onPress={() => dispatch({type: 'INCREASE_COUNTER'})}>
+                <TouchableWithoutFeedback>
                     <View>
                         <Text style={styles.countFooter}>
                             Records: {records}
@@ -233,13 +233,13 @@ const timeConverter = (UNIX_timestamp) => {
 };
 
 const Item = (item) => {
-    const {dispatch} = useContext(AppConfig);
+    //const {dispatch} = useContext(AppConfig);
     const navigation = useNavigation();
 
     return (
         <TouchableHighlight
             onPress={() => {
-                dispatch({type: 'SET_ITEM', data: item});
+                //dispatch({type: 'SET_ITEM', data: item});
                 navigation.navigate('Details');
             }
             }

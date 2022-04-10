@@ -17,7 +17,7 @@ import {AppContext} from '../app/app';
 import {useNavigation} from '@react-navigation/core';
 
 const Users = ({navigation}) => {
-    const {item, setContextItem} = useContext(AppContext);
+    const {state} = useContext(AppContext);
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
@@ -30,13 +30,12 @@ const Users = ({navigation}) => {
     }, []);
 
     const getItems = () => {
-        console.log('Key....... ', item.token);
-        fetch(item.url + 'api/users/get', {
+        fetch(state.url + 'api/users/get', {
             method: 'get',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': item.token,
+                'Authorization': state.token,
             },
         })
             .then((response) => response.json())
@@ -212,23 +211,20 @@ const Users = ({navigation}) => {
     );
 };
 
-const Item = (items) => {
-    //const {dispatch} = useContext(AppConfig);
-    const {item, setContextItem} = useContext(AppContext);
+const Item = (item) => {
+    const {state, setContextState} = useContext(AppContext);
     const navigation = useNavigation();
-console.log()
     return (
         <TouchableHighlight
             onPress={() => {
-                //dispatch({type: 'SET_ITEM', data: item});
-                setContextItem({...item,...{item: items}});
+                setContextState({...state,...{item: item}});
                 navigation.navigate('Details');
             }
             }
             underlayColor='#ddd'>
             <View style={styles.row}>
                 <Text style={styles.rowText}>
-                    {items.name} - {items.pass} - {items.description}
+                    {item.name} - {item.pass} - {item.description}
                 </Text>
             </View>
         </TouchableHighlight>

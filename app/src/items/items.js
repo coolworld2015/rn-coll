@@ -17,7 +17,7 @@ import {AppContext} from '../app/app';
 import {useNavigation} from '@react-navigation/core';
 
 const Items = ({navigation}) => {
-    const {state, setContextState} = useContext(AppContext);
+    const {state} = useContext(AppContext);
 
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
