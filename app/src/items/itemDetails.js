@@ -12,16 +12,16 @@ import {
 } from 'react-native';
 
 import {useNavigation} from '@react-navigation/core';
-import {AppConfig, AppContext} from '../app/app';
+import {AppContext} from '../app/app';
 
 const PhoneDetails = () => {
-    const {item} = useContext(AppContext);
+    const {state} = useContext(AppContext);
     const navigation = useNavigation();
 
     const goBack = () => {
         navigation.goBack();
     };
-console.log('AppContextDetails - ', item.data.name)
+console.log('AppContextDetails - ', state.item.name)
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -40,7 +40,7 @@ console.log('AppContextDetails - ', item.data.name)
                     <TouchableWithoutFeedback>
                         <View>
                             <Text style={styles.textLarge}>
-                                {item.data.name}
+                                {state.item.name}
                             </Text>
                         </View>
                     </TouchableWithoutFeedback>
@@ -61,7 +61,7 @@ console.log('AppContextDetails - ', item.data.name)
 
                         <View style={styles.itemWrap}>
                             <Image
-                            source={{uri: item.data.pic}}
+                            source={{uri: state.item.pic}}
                             resizeMode='stretch'
                             style={styles.img}
                         />
@@ -74,7 +74,7 @@ console.log('AppContextDetails - ', item.data.name)
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {item.data.id}
+                                {state.item.id}
                             </Text>
                         </View>
                     </View>
@@ -85,7 +85,7 @@ console.log('AppContextDetails - ', item.data.name)
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {item.data.name}
+                                {state.item.name}
                             </Text>
                         </View>
                     </View>
@@ -96,7 +96,7 @@ console.log('AppContextDetails - ', item.data.name)
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {item.data.category}
+                                {state.item.category}
                             </Text>
                         </View>
                     </View>
@@ -107,7 +107,7 @@ console.log('AppContextDetails - ', item.data.name)
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {item.data.group}
+                                {state.item.group}
                             </Text>
                         </View>
                     </View>
@@ -118,7 +118,7 @@ console.log('AppContextDetails - ', item.data.name)
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {item.data.description}
+                                {state.item.description}
                             </Text>
                         </View>
                     </View>

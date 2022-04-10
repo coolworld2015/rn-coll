@@ -14,12 +14,10 @@ import {
     KeyboardAvoidingView,
 } from 'react-native';
 
-import {AppConfig, AppContext} from './app';
+import {AppContext} from './app';
 
 const Login = () => {
-    //const {state, dispatch} = useContext(AppConfig);
-    const {item, setContextItem} = useContext(AppContext);
-console.log('AppContext - ', item)
+    const {state, setContextState} = useContext(AppContext);
     const [showProgress, setShowProgress] = useState(false);
     const [badCredentials, setBadCredentials] = useState(false);
     const [name, setName] = useState('1');
@@ -43,7 +41,7 @@ console.log('AppContext - ', item)
 
         setShowProgress(true);
         console.log('name ', name);
-        fetch(item.url + 'api/login', {
+        fetch(state.url + 'api/login', {
             method: 'post',
             body: JSON.stringify({
                 name,
@@ -59,10 +57,8 @@ console.log('AppContext - ', item)
             .then((responseData) => {
                 console.log('SET_TOKEN ', responseData);
                 if (responseData.token) {
-                    //dispatch({type: 'SET_TOKEN', data: responseData.token});
-                    setContextItem({...item,...{token: responseData.token, isLoggedIn: true}});
+                    setContextState({...state, ...{token: responseData.token, isLoggedIn: true}});
                     setBadCredentials(false);
-                    //dispatch({type: 'SET_IS_LOGGED_IN'});
                 } else {
                     this.setState({
                         badCredentials: true,

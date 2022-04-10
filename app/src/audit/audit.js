@@ -13,11 +13,10 @@ import {
     Dimensions, FlatList, RefreshControl,
 } from 'react-native';
 
-import {AppConfig, AppContext} from '../app/app';
+import {AppContext} from '../app/app';
 import {useNavigation} from '@react-navigation/core';
 
 const Audit = ({navigation}) => {
-    const {state, dispatch} = useContext(AppConfig);
     const {item, setContextItem} = useContext(AppContext);
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
@@ -31,7 +30,7 @@ const Audit = ({navigation}) => {
     }, []);
 
     const getItems = () => {
-        console.log('Key....... ', state.token);
+        console.log('Key....... ', item.token);
         fetch(item.url + 'api/audit/get', {
             method: 'get',
             headers: {
@@ -201,7 +200,7 @@ const Audit = ({navigation}) => {
             />
 
             <View>
-                <TouchableWithoutFeedback onPress={() => dispatch({type: 'INCREASE_COUNTER'})}>
+                <TouchableWithoutFeedback>
                     <View>
                         <Text style={styles.countFooter}>
                             Records: {records}
@@ -213,21 +212,23 @@ const Audit = ({navigation}) => {
     );
 };
 
-const Item = (item) => {
-    const {dispatch} = useContext(AppConfig);
+const Item = (items) => {
+    //const {dispatch} = useContext(AppConfig);
+    const {item, setContextItem} = useContext(AppContext);
     const navigation = useNavigation();
 
     return (
         <TouchableHighlight
             onPress={() => {
-                dispatch({type: 'SET_ITEM', data: item});
+                //dispatch({type: 'SET_ITEM', data: item});
+                setContextItem({...item,...{item: items}});
                 navigation.navigate('Details');
             }
             }
             underlayColor='#ddd'>
             <View style={styles.row}>
                 <Text style={styles.rowText}>
-                    {item.name} - {item.date} - {item.description}
+                    {items.name} - {items.date} - {items.description}
                 </Text>
             </View>
         </TouchableHighlight>

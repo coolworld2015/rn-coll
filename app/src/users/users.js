@@ -13,7 +13,7 @@ import {
     Dimensions, FlatList, RefreshControl,
 } from 'react-native';
 
-import {AppConfig, AppContext} from '../app/app';
+import {AppContext} from '../app/app';
 import {useNavigation} from '@react-navigation/core';
 
 const Users = ({navigation}) => {
@@ -200,7 +200,7 @@ const Users = ({navigation}) => {
             />
 
             <View>
-                <TouchableWithoutFeedback onPress={() => dispatch({type: 'INCREASE_COUNTER'})}>
+                <TouchableWithoutFeedback>
                     <View>
                         <Text style={styles.countFooter}>
                             Records: {records}

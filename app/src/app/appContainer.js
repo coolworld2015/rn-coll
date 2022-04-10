@@ -4,15 +4,13 @@ import React, {useContext, useEffect} from 'react';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-/*import {createStackNavigator} from 'react-navigation-stack';*/
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-/*import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';*/
 import {useNavigation} from '@react-navigation/core';
 
 import {Image, Platform} from 'react-native';
 
-import {AppConfig, AppContext} from './app';
+import {AppContext} from './app';
 
 import Items from '../items/items';
 import ItemDetails from '../items/itemDetails';
@@ -26,17 +24,15 @@ import Audit from '../audit/audit';
 import AuditDetails from '../audit/auditDetails';
 
 const LogOut = () => {
-    //const {dispatch} = useContext(AppConfig);
     const navigation = useNavigation();
-    const {item, setContextItem} = useContext(AppContext);
+    const {state, setContextState} = useContext(AppContext);
 
     useEffect(() => {
         const didFocusListener = navigation.addListener(
             'focus',
             () => {
                 console.log('Focused on Quit');
-                setContextItem({...item,...{isLoggedIn: false}});
-                //dispatch({type: 'SET_IS_LOGGED_OUT'});
+                setContextState({...state, ...{isLoggedIn: false, token: null}});
             },
         );
     }, []);

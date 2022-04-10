@@ -17,7 +17,7 @@ import {AppContext} from '../app/app';
 import {useNavigation} from '@react-navigation/core';
 
 const Items = ({navigation}) => {
-    const {item, setContextItem} = useContext(AppContext);
+    const {state, setContextState} = useContext(AppContext);
 
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
@@ -34,12 +34,12 @@ const Items = ({navigation}) => {
         setShowProgress(true);
         setServerError(false);
 
-        fetch(item.url + 'api/pic/get', {
+        fetch(state.url + 'api/pic/get', {
             method: 'get',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': item.token,
+                'Authorization': state.token,
             },
         })
             .then((response) => response.json())
@@ -65,7 +65,7 @@ const Items = ({navigation}) => {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': item.token,
+                'Authorization': state.token,
             },
         })
             .then((response) => response.json())
@@ -244,13 +244,13 @@ const Items = ({navigation}) => {
 };
 
 const Item = (item) => {
-    const {setContextItem} = useContext(AppContext);
+    const {state, setContextState} = useContext(AppContext);
     const navigation = useNavigation();
 
     return (
         <TouchableHighlight
             onPress={() => {
-                setContextItem({...item,...{data: item}});
+                setContextState({...state, ...{item: item}});
                 navigation.navigate('Details');
             }
             }
