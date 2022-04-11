@@ -50,7 +50,7 @@ class UserAdd extends Component {
         })
             .then((response) => response.json())
             .then((responseData) => {
-                this.props.navigation.navigate('Users', { refresh: true})
+                this.props.navigation.navigate('Users', {refresh: true})
             })
             .catch((error) => {
                 this.setState({
@@ -88,7 +88,7 @@ class UserAdd extends Component {
                 <View style={styles.header}>
                     <View>
                         <TouchableHighlight
-                            onPress={()=> this.goBack()}
+                            onPress={() => this.goBack()}
                             underlayColor='darkblue'
                         >
                             <View>
@@ -189,7 +189,6 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        //backgroundColor: '#48BBEC',
         backgroundColor: 'darkblue',
         borderWidth: 0,
         borderColor: 'whitesmoke'

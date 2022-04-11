@@ -21,7 +21,7 @@ const PhoneDetails = () => {
     const goBack = () => {
         navigation.goBack();
     };
-console.log('AppContextDetails - ', state.item.name)
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -57,16 +57,13 @@ console.log('AppContextDetails - ', state.item.name)
 
             <ScrollView>
                 <View style={styles.form}>
-
-
-                        <View style={styles.itemWrap}>
-                            <Image
+                    <View style={styles.itemWrap}>
+                        <Image
                             source={{uri: state.item.pic}}
                             resizeMode='stretch'
                             style={styles.img}
                         />
-                        </View>
-
+                    </View>
 
                     <View style={styles.itemBlock}>
                         <Text style={styles.itemTextBold}>
@@ -123,8 +120,6 @@ console.log('AppContextDetails - ', state.item.name)
                         </View>
                     </View>
 
-
-
                     <TouchableHighlight
                         onPress={() => goBack()}
                         style={styles.button}>
@@ -134,7 +129,6 @@ console.log('AppContextDetails - ', state.item.name)
                             </Text>
                         </View>
                     </TouchableHighlight>
-
                 </View>
             </ScrollView>
         </View>

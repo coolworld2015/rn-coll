@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 import {AppContext} from '../app/app';
-import {useNavigation} from '@react-navigation/core';
+import Item from './item';
 
 const Items = ({navigation}) => {
     const {state} = useContext(AppContext);
@@ -214,6 +214,7 @@ const Items = ({navigation}) => {
                         name={item.name}
                         group={item.group}
                         category={item.category}
+                        description={item.description}
                         pic={item.pic}
                         data={{item}}
                         navigation={navigation}
@@ -240,36 +241,6 @@ const Items = ({navigation}) => {
                 </TouchableWithoutFeedback>
             </View>
         </View>
-    );
-};
-
-const Item = (item) => {
-    const {state, setContextState} = useContext(AppContext);
-    const navigation = useNavigation();
-
-    return (
-        <TouchableHighlight
-            onPress={() => {
-                setContextState({...state, ...{item: item}});
-                navigation.navigate('Details');
-            }
-            }
-            underlayColor='#ddd'>
-            <View style={styles.row}>
-                <Image
-                    style={{
-                        width: 100,
-                        height: 100,
-                        borderRadius: 20,
-                    }}
-                    resizeMode='stretch'
-                    source={{uri: item.pic}}
-                />
-                <Text style={styles.rowText}>
-                    {item.name} - {item.group} - {item.category}
-                </Text>
-            </View>
-        </TouchableHighlight>
     );
 };
 
@@ -335,21 +306,6 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderColor: 'lightgray',
         borderRadius: 0,
-    },
-    row: {
-        flex: 1,
-        flexDirection: 'row',
-        padding: 20,
-        alignItems: 'center',
-        borderColor: '#D7D7D7',
-        borderBottomWidth: 1,
-        backgroundColor: '#fff',
-    },
-    rowText: {
-        backgroundColor: '#fff',
-        color: 'black',
-        fontWeight: 'bold',
-        padding: 5,
     },
     countFooter: {
         fontSize: 16,

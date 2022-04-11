@@ -110,7 +110,6 @@ const AppContainer = () => {
         },
         upperCaseLabel: false,
         indicatorStyle: {backgroundColor: 'darkblue'},
-        //activeBackgroundColor: 'darkblue',
     };
 
     const name = 'Users';

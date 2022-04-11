@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 import {AppContext} from '../app/app';
-import {useNavigation} from '@react-navigation/core';
+import Item from './item';
 
 const Users = ({navigation}) => {
     const {state, setContextState} = useContext(AppContext);
@@ -219,26 +219,6 @@ const Users = ({navigation}) => {
     );
 };
 
-const Item = (item) => {
-    const {state, setContextState} = useContext(AppContext);
-    const navigation = useNavigation();
-    return (
-        <TouchableHighlight
-            onPress={() => {
-                setContextState({...state, ...{item: item}});
-                navigation.navigate('Details');
-            }
-            }
-            underlayColor='#ddd'>
-            <View style={styles.row}>
-                <Text style={styles.rowText}>
-                    {item.name} - {item.pass} - {item.description}
-                </Text>
-            </View>
-        </TouchableHighlight>
-    );
-};
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -301,20 +281,6 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderColor: 'lightgray',
         borderRadius: 0,
-    },
-    row: {
-        flex: 1,
-        flexDirection: 'row',
-        padding: 20,
-        alignItems: 'center',
-        borderColor: '#D7D7D7',
-        borderBottomWidth: 1,
-        backgroundColor: '#fff',
-    },
-    rowText: {
-        backgroundColor: '#fff',
-        color: 'black',
-        fontWeight: 'bold',
     },
     countFooter: {
         fontSize: 16,

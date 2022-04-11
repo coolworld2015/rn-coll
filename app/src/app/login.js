@@ -23,8 +23,6 @@ const Login = () => {
     const [name, setName] = useState('1');
     const [pass, setPass] = useState('1');
 
-    const width = Dimensions.get('window').width;
-
     useEffect(() => {
         return () => {
             console.log('logged in ');
@@ -98,18 +96,7 @@ const Login = () => {
                             setName(text);
                             setBadCredentials(false);
                         }}
-                        style={{
-                            height: 50,
-                            width: width * .90,
-                            marginTop: 10,
-                            padding: 4,
-                            fontSize: 18,
-                            borderWidth: 1,
-                            borderColor: 'lightgray',
-                            borderRadius: 5,
-                            color: 'black',
-                            backgroundColor: 'white',
-                        }}
+                        style={styles.input}
                         value={name}
                         placeholder='Login'>
                     </TextInput>
@@ -120,18 +107,7 @@ const Login = () => {
                             setPass(text);
                             setBadCredentials(false);
                         }}
-                        style={{
-                            height: 50,
-                            width: width * .90,
-                            marginTop: 10,
-                            padding: 4,
-                            fontSize: 18,
-                            borderWidth: 1,
-                            borderColor: 'lightgray',
-                            borderRadius: 5,
-                            color: 'black',
-                            backgroundColor: 'white',
-                        }}
+                        style={styles.input}
                         value={pass}
                         placeholder='Password'
                         secureTextEntry={true}>
@@ -203,6 +179,18 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 24,
         fontWeight: 'bold',
+    },
+    input: {
+        height: 50,
+        width: Dimensions.get('window').width * .90,
+        marginTop: 10,
+        padding: 4,
+        fontSize: 18,
+        borderWidth: 1,
+        borderColor: 'lightgray',
+        borderRadius: 5,
+        color: 'black',
+        backgroundColor: 'white',
     },
     loader: {
         marginTop: 40,

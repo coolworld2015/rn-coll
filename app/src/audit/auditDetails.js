@@ -113,7 +113,6 @@ const AuditDetails = () => {
                     </View>
 
 
-
                     <TouchableHighlight
                         onPress={() => goBack()}
                         style={styles.button}>
