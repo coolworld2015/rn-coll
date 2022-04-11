@@ -13,6 +13,7 @@ import {
     Dimensions, FlatList, RefreshControl,
 } from 'react-native';
 
+import {useNavigation} from '@react-navigation/core';
 import {AppContext} from '../app/app';
 import Item from './item';
 
@@ -147,7 +148,7 @@ const Users = ({navigation}) => {
                 </View>
                 <View>
                     <TouchableHighlight
-                        onPress={() => true}
+                        onPress={() => navigation.navigate('Add')}
                         underlayColor='darkblue'>
                         <View>
                             <Text style={styles.textSmall}>

@@ -1,47 +1,53 @@
 'use strict';
 
-import React, {Component} from 'react';
+import React, {useContext, useState} from 'react';
 import {
     StyleSheet,
     Text,
+    TextInput,
     View,
     TouchableHighlight,
+    TouchableWithoutFeedback,
     ScrollView,
-    ActivityIndicator,
-    TextInput, TouchableWithoutFeedback
+    ActivityIndicator
 } from 'react-native';
 
-class UserAdd extends Component {
-    constructor(props) {
-        super(props);
+import {useNavigation} from '@react-navigation/core';
+import {AppContext} from '../app/app';
 
-        this.state = {
-            showProgress: false
-        }
-    }
+const UserAdd = () => {
+    const {state, setContextState} = useContext(AppContext);
+    const navigation = useNavigation();
+    const [serverError, setServerError] = useState(false);
+    const [invalidValue, setInvalidValue] = useState(false);
+    const [showProgress, setShowProgress] = useState(false);
 
-    addItem() {
-        if (this.state.name === undefined || this.state.name === '' ||
-            this.state.pass === undefined || this.state.pass === '' ||
-            this.state.description === undefined || this.state.description === '') {
-            this.setState({
-                invalidValue: true
-            });
+    const [name, setName] = useState('');
+    const [pass, setPass] = useState('');
+    const [description, setDescription] = useState('');
+
+    const goBack = () => {
+        navigation.goBack();
+    };
+
+    const addItem = () => {
+        if (name === undefined || name === '' ||
+            pass === undefined || pass === '' ||
+            description === undefined || description === '') {
+            setInvalidValue(true);
             return;
         }
 
-        this.setState({
-            showProgress: true
-        });
+        setShowProgress(true);
 
-        fetch(appConfig.url + 'api/users/add', {
+        fetch(state.url + 'api/users/add', {
             method: 'post',
             body: JSON.stringify({
                 id: +new Date,
-                name: this.state.name,
-                pass: this.state.pass,
-                description: this.state.description,
-                authorization: appConfig.access_token
+                name,
+                pass,
+                description,
+                authorization: state.token
             }),
             headers: {
                 'Accept': 'application/json',
@@ -49,165 +55,218 @@ class UserAdd extends Component {
             }
         })
             .then((response) => response.json())
-            .then((responseData) => {
-                this.props.navigation.navigate('Users', {refresh: true})
+            .then(() => {
+                setContextState({...state, ...{refresh: true}});
+                navigation.goBack();
             })
             .catch((error) => {
-                this.setState({
-                    serverError: true
-                });
+                console.log('error ', error);
+                setServerError(true);
             })
             .finally(() => {
-                this.setState({
-                    showProgress: false
-                });
+                setShowProgress(false);
             });
+    };
+
+    let errorCtrl, validCtrl, loader;
+
+    if (invalidValue) {
+        validCtrl = <Text style={styles.error}>
+            Value required - please provide.
+        </Text>;
     }
 
-    goBack() {
-        this.props.navigation.goBack();
+    if (serverError) {
+        errorCtrl = <Text style={styles.error}>
+            Something went wrong.
+        </Text>;
     }
 
-    render() {
-        let errorCtrl, validCtrl;
+    if (showProgress) {
+        loader = <View style={styles.loader}>
+            <ActivityIndicator
+                size="large"
+                color="darkblue"
+                animating={true}
+            />
+        </View>;
+    }
 
-        if (this.state.serverError) {
-            errorCtrl = <Text style={styles.error}>
-                Something went wrong.
-            </Text>;
-        }
-
-        if (this.state.invalidValue) {
-            validCtrl = <Text style={styles.error}>
-                Value required - please provide.
-            </Text>;
-        }
-
-        return (
-            <View style={styles.container}>
-                <View style={styles.header}>
-                    <View>
-                        <TouchableHighlight
-                            onPress={() => this.goBack()}
-                            underlayColor='darkblue'
-                        >
-                            <View>
-                                <Text style={styles.textSmall}>
-                                    Back
-                                </Text>
-                            </View>
-                        </TouchableHighlight>
-                    </View>
-                    <View>
-                        <TouchableWithoutFeedback underlayColor='#ddd'>
-                            <View>
-                                <Text style={styles.textLarge}>
-                                    New record
-                                </Text>
-                            </View>
-                        </TouchableWithoutFeedback>
-                    </View>
-                    <View>
-                        <TouchableHighlight
-                            onPress={() => this.deleteItemDialog()}
-                            underlayColor='darkblue'
-                        >
-                            <View>
-                                <Text style={styles.textSmall}>
-                                </Text>
-                            </View>
-                        </TouchableHighlight>
-                    </View>
+    return (
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <View>
+                    <TouchableHighlight
+                        onPress={() => goBack()}
+                        underlayColor='darkblue'>
+                        <View>
+                            <Text style={styles.textSmall}>
+                                Back
+                            </Text>
+                        </View>
+                    </TouchableHighlight>
                 </View>
-
-                <ScrollView keyboardShouldPersistTaps='always'>
-                    <View style={{
-                        flex: 1,
-                        padding: 10,
-                        justifyContent: 'flex-start'
-                    }}>
-
-                        <TextInput
-                            onChangeText={(text) => this.setState({
-                                name: text,
-                                invalidValue: false
-                            })}
-                            style={styles.loginInput}
-                            value={this.state.name}
-                            placeholder="Login">
-                        </TextInput>
-
-                        <TextInput
-                            onChangeText={(text) => this.setState({
-                                pass: text,
-                                invalidValue: false
-                            })}
-                            style={styles.loginInput}
-                            value={this.state.pass}
-                            placeholder="Password">
-                        </TextInput>
-
-                        <TextInput
-                            multiline={true}
-                            onChangeText={(text) => this.setState({
-                                description: text,
-                                invalidValue: false
-                            })}
-                            style={styles.formInputArea}
-                            value={this.state.description}
-                            placeholder="Description">
-                        </TextInput>
-
-                        {validCtrl}
-
-                        <TouchableHighlight
-                            onPress={() => this.addItem()}
-                            style={styles.button}>
-                            <Text style={styles.buttonText}>Add</Text>
-                        </TouchableHighlight>
-
-                        {errorCtrl}
-
-                        <ActivityIndicator
-                            animating={this.state.showProgress}
-                            size="large"
-                            style={styles.loader}
-                        />
-                    </View>
-                </ScrollView>
+                <View>
+                    <TouchableWithoutFeedback>
+                        <View>
+                            <Text style={styles.textLarge}>
+                                New item
+                            </Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>
+                <View>
+                    <TouchableHighlight
+                        onPress={() => true}
+                        underlayColor='darkblue'>
+                        <View>
+                            <Text style={styles.textSmall}>
+                            </Text>
+                        </View>
+                    </TouchableHighlight>
+                </View>
             </View>
-        )
-    }
-}
+
+            <ScrollView>
+                <View style={styles.form}>
+                    <TextInput
+                        onChangeText={(text) => {
+                            setName(text);
+                            setInvalidValue(false)
+                        }}
+                        style={styles.formInputBold}
+                        value={name}
+                        placeholder="Name">
+                    </TextInput>
+
+                    <TextInput
+                        onChangeText={(text) => {
+                            setPass(text);
+                            setInvalidValue(false)
+                        }}
+                        style={styles.formInputBold}
+                        value={pass}
+                        placeholder="Pass">
+                    </TextInput>
+
+                    <TextInput
+                        onChangeText={(text) => {
+                            setDescription(text);
+                            setInvalidValue(false)
+                        }}
+                        style={styles.formInputBold}
+                        value={description}
+                        placeholder="Description">
+                    </TextInput>
+
+                    {loader}
+
+                    {errorCtrl}
+
+                    {validCtrl}
+
+                    <TouchableHighlight
+                        onPress={() => addItem()}
+                        style={styles.button}>
+                        <View>
+                            <Text style={styles.buttonText}>
+                                Add
+                            </Text>
+                        </View>
+                    </TouchableHighlight>
+                </View>
+            </ScrollView>
+        </View>
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        marginTop: 50,
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         backgroundColor: 'darkblue',
         borderWidth: 0,
-        borderColor: 'whitesmoke'
+        borderColor: 'whitesmoke',
+        marginTop: 50,
     },
     textSmall: {
-        fontSize: 20,
+        fontSize: 16,
         textAlign: 'center',
         margin: 16,
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
     },
     textLarge: {
-        fontSize: 24,
+        fontSize: 20,
         textAlign: 'center',
         margin: 10,
         marginTop: 12,
         marginRight: 40,
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
+    },
+    form: {
+        flex: 1,
+        padding: 10,
+        justifyContent: 'flex-start',
+        paddingBottom: 130,
+        backgroundColor: 'white',
+    },
+    itemBlock: {
+        flexDirection: 'row',
+    },
+    itemWrap: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    itemTextBold: {
+        fontSize: 18,
+        textAlign: 'left',
+        margin: 5,
+        fontWeight: 'bold',
+        color: 'black',
+    },
+    itemText: {
+        fontSize: 18,
+        textAlign: 'left',
+        margin: 5,
+        marginLeft: 2,
+        color: 'black',
+    },
+    button: {
+        height: 50,
+        backgroundColor: 'darkblue',
+        borderColor: '#48BBEC',
+        alignSelf: 'stretch',
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    loader: {
+        marginTop: 20,
+    },
+    error: {
+        color: 'red',
+        paddingTop: 10,
+        textAlign: 'center',
+    },
+    img: {
+        height: 300,
+        width: 270,
+        borderRadius: 20,
+        margin: 10,
     },
     formInputBold: {
         height: 50,
@@ -220,48 +279,6 @@ const styles = StyleSheet.create({
         color: 'black',
         fontWeight: 'bold'
     },
-    loginInput: {
-        height: 50,
-        marginTop: 10,
-        padding: 4,
-        fontSize: 18,
-        borderWidth: 1,
-        borderColor: 'lightgray',
-        borderRadius: 5,
-        color: 'black'
-    },
-    formInputArea: {
-        height: 100,
-        marginTop: 10,
-        padding: 4,
-        fontSize: 18,
-        borderWidth: 1,
-        borderColor: 'lightgray',
-        borderRadius: 5,
-        color: 'black'
-    },
-    button: {
-        height: 50,
-        backgroundColor: 'darkblue',
-        alignSelf: 'stretch',
-        marginTop: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 5
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 24,
-        fontWeight: 'bold'
-    },
-    loader: {
-        marginTop: 20
-    },
-    error: {
-        color: 'red',
-        paddingTop: 10,
-        textAlign: 'center'
-    }
 });
 
 export default UserAdd;

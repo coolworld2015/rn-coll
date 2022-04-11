@@ -18,6 +18,7 @@ import ItemDetails from '../items/itemDetails';
 import Photos from '../photos/photos';
 
 import Users from '../users/users';
+import UserAdd from '../users/userAdd';
 import UserDetails from '../users/userDetails';
 
 import Audit from '../audit/audit';
@@ -68,6 +69,7 @@ const UsersStackScreen = () => {
     return (
         <UsersStack.Navigator headerMode={'none'}>
             <UsersStack.Screen name="Users" component={Users} options={{title: ''}}/>
+            <UsersStack.Screen name="Add" component={UserAdd} options={{title: '', headerLeft: null}}/>
             <UsersStack.Screen name="Details" component={UserDetails} options={{title: '', headerLeft: null}}/>
         </UsersStack.Navigator>
     );
