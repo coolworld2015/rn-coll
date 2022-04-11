@@ -13,11 +13,12 @@ import {
     Dimensions, FlatList, RefreshControl,
 } from 'react-native';
 
-import {AppConfig} from '../app/app';
-import {useNavigation} from '@react-navigation/core';
+import {AppContext} from '../app/app';
+import Item from './item';
 
 const Phones = ({navigation}) => {
-    const {dispatch} = useContext(AppConfig);
+    const {state} = useContext(AppContext);
+
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
@@ -30,7 +31,14 @@ const Phones = ({navigation}) => {
     }, []);
 
     const getItems = () => {
-        fetch('http://ui-base.herokuapp.com/api/items/get')
+        fetch(state.url + 'api/items/get', {
+            method: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': state.token,
+            },
+        })
             .then((response) => response.json())
             .then(items => {
                 setItems(items);
@@ -125,7 +133,7 @@ const Phones = ({navigation}) => {
                         underlayColor='darkblue'>
                         <View>
                             <Text style={styles.textSmall}>
-                                New
+                                Search
                             </Text>
                         </View>
                     </TouchableHighlight>
@@ -164,6 +172,7 @@ const Phones = ({navigation}) => {
                         id={item.id}
                         name={item.name}
                         phone={item.phone}
+                        index={item.index}
                         data={{item}}
                         navigation={navigation}
                     />
@@ -180,7 +189,7 @@ const Phones = ({navigation}) => {
             />
 
             <View>
-                <TouchableWithoutFeedback onPress={() => dispatch({type: 'INCREASE_COUNTER'})}>
+                <TouchableWithoutFeedback>
                     <View>
                         <Text style={styles.countFooter}>
                             Records: {records}
@@ -192,32 +201,12 @@ const Phones = ({navigation}) => {
     );
 };
 
-const Item = (item) => {
-    const {dispatch} = useContext(AppConfig);
-    const navigation = useNavigation();
-
-    return (
-        <TouchableHighlight
-            onPress={() => {
-                dispatch({type: 'SET_ITEM', data: item});
-                navigation.navigate('Details');
-            }
-            }
-            underlayColor='#ddd'>
-            <View style={styles.row}>
-                <Text style={styles.rowText}>
-                    {item.name} - {item.phone}
-                </Text>
-            </View>
-        </TouchableHighlight>
-    );
-};
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
         backgroundColor: 'white',
+        marginTop: 50,
     },
     iconForm: {
         flexDirection: 'row',
@@ -274,20 +263,6 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderColor: 'lightgray',
         borderRadius: 0,
-    },
-    row: {
-        flex: 1,
-        flexDirection: 'row',
-        padding: 20,
-        alignItems: 'center',
-        borderColor: '#D7D7D7',
-        borderBottomWidth: 1,
-        backgroundColor: '#fff',
-    },
-    rowText: {
-        backgroundColor: '#fff',
-        color: 'black',
-        fontWeight: 'bold',
     },
     countFooter: {
         fontSize: 16,

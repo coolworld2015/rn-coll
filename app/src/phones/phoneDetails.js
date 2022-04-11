@@ -11,10 +11,10 @@ import {
 } from 'react-native';
 
 import {useNavigation} from '@react-navigation/core';
-import {AppConfig} from '../app/app';
+import {AppContext} from '../app/app';
 
 const PhoneDetails = () => {
-    const {state} = useContext(AppConfig);
+    const {state} = useContext(AppContext);
     const navigation = useNavigation();
 
     const goBack = () => {
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         backgroundColor: 'white',
+        marginTop: 50,
     },
     header: {
         flexDirection: 'row',
