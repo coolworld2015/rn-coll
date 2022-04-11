@@ -4,6 +4,7 @@ import React, {useContext, useState} from 'react';
 import {
     StyleSheet,
     Text,
+    TextInput,
     View,
     TouchableHighlight,
     TouchableWithoutFeedback,
@@ -19,10 +20,53 @@ const UserDetails = () => {
     const {state, setContextState} = useContext(AppContext);
     const navigation = useNavigation();
     const [serverError, setServerError] = useState(false);
+    const [invalidValue, setInvalidValue] = useState(false);
     const [showProgress, setShowProgress] = useState(false);
+
+    const [name, setName] = useState(state.item.name);
+    const [pass, setPass] = useState(state.item.pass);
+    const [description, setDescription] = useState(state.item.description);
 
     const goBack = () => {
         navigation.goBack();
+    };
+
+    const updateItem = () => {
+        if (name === undefined || name === '' ||
+            pass === undefined || pass === '' ||
+            description === undefined || description === '') {
+            setInvalidValue(true);
+            return;
+        }
+
+        setShowProgress(true);
+
+        fetch(state.url + 'api/users/update', {
+            method: 'post',
+            body: JSON.stringify({
+                id: state.item.id,
+                name,
+                pass,
+                description,
+                authorization: state.token
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((response) => response.json())
+            .then(() => {
+                setContextState({...state,...{refresh: true}});
+                navigation.goBack();
+            })
+            .catch((error) => {
+                console.log('error ', error);
+                setServerError(true);
+            })
+            .finally(() => {
+                setShowProgress(false);
+            });
     };
 
     const deleteItemDialog = () => {
@@ -55,19 +99,25 @@ const UserDetails = () => {
         })
             .then((response) => response.json())
             .then(() => {
-                setShowProgress(false);
                 setContextState({...state,...{refresh: true}});
                 navigation.goBack();
             })
             .catch((error) => {
                 console.log('error ', error);
-                setShowProgress(false);
                 setServerError(true);
-                navigation.goBack();
+            })
+            .finally(() => {
+                setShowProgress(false);
             });
     };
 
-    let errorCtrl, loader;
+    let errorCtrl, validCtrl, loader;
+
+    if (invalidValue) {
+        validCtrl = <Text style={styles.error}>
+            Value required - please provide.
+        </Text>;
+    }
 
     if (serverError) {
         errorCtrl = <Text style={styles.error}>
@@ -124,56 +174,42 @@ const UserDetails = () => {
             <ScrollView>
                 <View style={styles.form}>
 
-                    <View style={styles.itemBlock}>
-                        <Text style={styles.itemTextBold}>
-                            ID:
-                        </Text>
-                        <View style={styles.itemWrap}>
-                            <Text style={styles.itemText}>
-                                {state.item.id}
-                            </Text>
-                        </View>
-                    </View>
+                    <TextInput
+                        style={styles.formInputBold}
+                        value={state.item.id.toString()}
+                        editable={false}
+                        placeholder="ID">
+                    </TextInput>
 
-                    <View style={styles.itemBlock}>
-                        <Text style={styles.itemTextBold}>
-                            Name:
-                        </Text>
-                        <View style={styles.itemWrap}>
-                            <Text style={styles.itemText}>
-                                {state.item.name}
-                            </Text>
-                        </View>
-                    </View>
+                    <TextInput
+                        onChangeText={(text) => {setName(text);setInvalidValue(false)}}
+                        style={styles.formInputBold}
+                        value={name}
+                        placeholder="Name">
+                    </TextInput>
 
-                    <View style={styles.itemBlock}>
-                        <Text style={styles.itemTextBold}>
-                            Pass:
-                        </Text>
-                        <View style={styles.itemWrap}>
-                            <Text style={styles.itemText}>
-                                {state.item.pass}
-                            </Text>
-                        </View>
-                    </View>
+                    <TextInput
+                        onChangeText={(text) => {setPass(text);setInvalidValue(false)}}
+                        style={styles.formInputBold}
+                        value={pass}
+                        placeholder="Pass">
+                    </TextInput>
 
-                    <View style={styles.itemBlock}>
-                        <Text style={styles.itemTextBold}>
-                            Description:
-                        </Text>
-                        <View style={styles.itemWrap}>
-                            <Text style={styles.itemText}>
-                                {state.item.description}
-                            </Text>
-                        </View>
-                    </View>
+                    <TextInput
+                        onChangeText={(text) => {setDescription(text);setInvalidValue(false)}}
+                        style={styles.formInputBold}
+                        value={description}
+                        placeholder="Description">
+                    </TextInput>
 
                     {loader}
 
                     {errorCtrl}
 
+                    {validCtrl}
+
                     <TouchableHighlight
-                        onPress={() => goBack()}
+                        onPress={() => updateItem()}
                         style={styles.button}>
                         <View>
                             <Text style={styles.buttonText}>
@@ -275,6 +311,17 @@ const styles = StyleSheet.create({
         width: 270,
         borderRadius: 20,
         margin: 10,
+    },
+    formInputBold: {
+        height: 50,
+        marginTop: 10,
+        padding: 4,
+        fontSize: 18,
+        borderWidth: 1,
+        borderColor: 'lightgray',
+        borderRadius: 5,
+        color: 'black',
+        fontWeight: 'bold'
     },
 });
 
