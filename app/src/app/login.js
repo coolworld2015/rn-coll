@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
     StyleSheet,
     Text,
@@ -25,6 +25,12 @@ const Login = () => {
 
     const width = Dimensions.get('window').width;
 
+    useEffect(() => {
+        return () => {
+            console.log('logged in ');
+        }
+    }, []);
+
     let errorCtrl;
     if (badCredentials) {
         errorCtrl = <Text style={styles.error}>
@@ -40,7 +46,6 @@ const Login = () => {
         }
 
         setShowProgress(true);
-        console.log('name ', name);
         fetch(state.url + 'api/login', {
             method: 'post',
             body: JSON.stringify({
@@ -185,7 +190,6 @@ const styles = StyleSheet.create({
     },
     button: {
         height: 50,
-        //backgroundColor: '#48BBEC',
         backgroundColor: 'darkblue',
         borderColor: '#48BBEC',
         alignSelf: 'stretch',

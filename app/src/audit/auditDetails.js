@@ -11,16 +11,16 @@ import {
 } from 'react-native';
 
 import {useNavigation} from '@react-navigation/core';
-import {AppConfig} from '../app/app';
+import {AppContext} from '../app/app';
 
-const PhoneDetails = () => {
-    const {state} = useContext(AppConfig);
+const AuditDetails = () => {
+    const {state} = useContext(AppContext);
     const navigation = useNavigation();
 
     const goBack = () => {
         navigation.goBack();
     };
-console.log(state.item.data.item)
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -39,7 +39,7 @@ console.log(state.item.data.item)
                     <TouchableWithoutFeedback>
                         <View>
                             <Text style={styles.textLarge}>
-                                {state.item.data.item.name}
+                                {state.item.name}
                             </Text>
                         </View>
                     </TouchableWithoutFeedback>
@@ -56,13 +56,25 @@ console.log(state.item.data.item)
 
             <ScrollView>
                 <View style={styles.form}>
+
                     <View style={styles.itemBlock}>
                         <Text style={styles.itemTextBold}>
-                            Login:
+                            ID:
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {state.item.data.item.name}
+                                {state.item.id}
+                            </Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.itemBlock}>
+                        <Text style={styles.itemTextBold}>
+                            Name:
+                        </Text>
+                        <View style={styles.itemWrap}>
+                            <Text style={styles.itemText}>
+                                {state.item.name}
                             </Text>
                         </View>
                     </View>
@@ -73,7 +85,7 @@ console.log(state.item.data.item)
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {state.item.data.item.date}
+                                {state.item.date}
                             </Text>
                         </View>
                     </View>
@@ -84,7 +96,7 @@ console.log(state.item.data.item)
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {state.item.data.item.ip.split(':')[3]}
+                                {state.item.ip.split(':')[3]}
                             </Text>
                         </View>
                     </View>
@@ -95,21 +107,12 @@ console.log(state.item.data.item)
                         </Text>
                         <View style={styles.itemWrap}>
                             <Text style={styles.itemText}>
-                                {state.item.data.item.description}
+                                {state.item.description}
                             </Text>
                         </View>
                     </View>
 
-                    <View style={styles.itemBlock}>
-                        <Text style={styles.itemTextBold}>
-                            ID:
-                        </Text>
-                        <View style={styles.itemWrap}>
-                            <Text style={styles.itemText}>
-                                {state.item.data.item.id}
-                            </Text>
-                        </View>
-                    </View>
+
 
                     <TouchableHighlight
                         onPress={() => goBack()}
@@ -169,9 +172,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     itemWrap: {
-        flex: 1,
-        flexDirection: 'column',
-        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     itemTextBold: {
         fontSize: 18,
@@ -210,6 +212,12 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         textAlign: 'center',
     },
+    img: {
+        height: 300,
+        width: 270,
+        borderRadius: 20,
+        margin: 10,
+    },
 });
 
-export default PhoneDetails;
+export default AuditDetails;

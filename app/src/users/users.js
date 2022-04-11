@@ -17,7 +17,7 @@ import {AppContext} from '../app/app';
 import {useNavigation} from '@react-navigation/core';
 
 const Users = ({navigation}) => {
-    const {state} = useContext(AppContext);
+    const {state, setContextState} = useContext(AppContext);
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
@@ -28,6 +28,13 @@ const Users = ({navigation}) => {
     useEffect(() => {
         getItems();
     }, []);
+
+    useEffect(() => {
+        if (state.refresh) {
+            setShowProgress(true);
+            getItems();
+        }
+    }, [state]);
 
     const getItems = () => {
         fetch(state.url + 'api/users/get', {
@@ -44,6 +51,7 @@ const Users = ({navigation}) => {
                 setFilteredItems(items);
                 setRecords(items.length);
                 setShowProgress(false);
+                setContextState({...state, ...{refresh: false}});
             })
             .catch((error) => {
                 console.log('error ', error);
@@ -217,7 +225,7 @@ const Item = (item) => {
     return (
         <TouchableHighlight
             onPress={() => {
-                setContextState({...state,...{item: item}});
+                setContextState({...state, ...{item: item}});
                 navigation.navigate('Details');
             }
             }

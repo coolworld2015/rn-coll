@@ -182,6 +182,7 @@ const Audit = ({navigation}) => {
                         id={item.id}
                         name={item.name}
                         date={item.date}
+                        ip={item.ip}
                         description={item.description}
                         data={{item}}
                         navigation={navigation}
