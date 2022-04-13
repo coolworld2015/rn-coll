@@ -31,6 +31,13 @@ const Items = ({navigation}) => {
         getItems();
     }, []);
 
+    useEffect(() => {
+        if (state.refresh) {
+            setShowProgress(true);
+            getItems();
+        }
+    }, [state]);
+
     const getItems = () => {
         setShowProgress(true);
         setServerError(false);

@@ -17,9 +17,10 @@ import {
     PermissionsAndroid,
 } from 'react-native';
 
-import {AppConfig} from '../app/app';
+import {AppConfig, AppContext} from '../app/app';
 import {useNavigation} from '@react-navigation/core';
 import CameraRoll from '@react-native-community/cameraroll';
+import RNFS from 'react-native-fs';
 
 const Photos = ({navigation}) => {
     //const {dispatch} = useContext(AppConfig);
@@ -65,6 +66,8 @@ const Photos = ({navigation}) => {
                 setFilteredItems(items.edges);
                 setRecords(items.edges.length);
                 setShowProgress(false);
+
+
             })
             .catch((err) => {
                 console.log('error ', error);
@@ -233,16 +236,65 @@ const timeConverter = (UNIX_timestamp) => {
 };
 
 const Item = (item) => {
-    //const {dispatch} = useContext(AppConfig);
+    const {state, setContextState} = useContext(AppContext);
     const navigation = useNavigation();
+
+    const addItem = (pic) => {
+        fetch(state.url + 'api/items/add', {
+            method: 'post',
+            body: JSON.stringify({
+                id: +new Date,
+                name: 'test from IOS',
+                pic,
+                category: 'test',
+                group: 'test',
+                description: 'test',
+                authorization: state.token
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((response) => response.json())
+            .then(() => {
+                setContextState({...state, ...{refresh: true}});
+                navigation.navigate('Items');
+            })
+            .catch((error) => {
+                console.log('error ', error);
+                setServerError(true);
+            })
+            .finally(() => {
+                setShowProgress(false);
+            });
+    };
 
     return (
         <TouchableHighlight
             onPress={() => {
-                //dispatch({type: 'SET_ITEM', data: item});
-                navigation.navigate('Details');
-            }
-            }
+
+                if (item.image.startsWith('ph://')) {
+                    let imagePATH = item.image.substring(5,41);
+                    let photoPATH = `assets-library://asset/asset.JPG?id=${imagePATH}&ext=JPG`;
+
+                    const dest = `${RNFS.TemporaryDirectoryPath}${Math.random().toString(36).substring(7)}.jpg`;
+
+                    RNFS.copyAssetsFileIOS(photoPATH, dest, 500, 500, 1.0, 1.0, 'contain')
+                        .then(data => {
+                            RNFS.readFile(data, 'base64')
+                                .then(base64 => {
+
+                                    console.log('data:image/png;base64,', base64);
+                                    const pic = 'data:image/png;base64,' + base64;
+                                    addItem(pic)
+                                });
+                        });
+                }
+
+                //console.log('Image ',item.image);
+
+            }}
             underlayColor='#ddd'>
             <View style={styles.row}>
                 <Text style={styles.rowText}>
