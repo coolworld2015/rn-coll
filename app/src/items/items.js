@@ -22,6 +22,7 @@ const Items = ({navigation}) => {
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
+    const [positionY, setPositionY] = useState(1000);
     const [searchQuery, setSearchQuery] = useState('');
     const [serverError, setServerError] = useState(false);
     const [showProgress, setShowProgress] = useState(true);
@@ -51,6 +52,30 @@ const Items = ({navigation}) => {
                 setTimeout(() => {
                     //getItemsAll();
                 }, 100)
+            })
+            .catch((error) => {
+                console.log('error ', error);
+                setShowProgress(false);
+                setServerError(true);
+            });
+    };
+
+    const getChunk = () => {
+        fetch(state.url + 'api/items/chunk/' + records, {
+            method: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': state.token,
+            },
+        })
+            .then((response) => response.json())
+            .then(data => {
+                setItems(items.concat(data));
+                setFilteredItems(items.concat(data));
+                setRecords(items.length + 20);
+                setShowProgress(false);
+                console.log('UPDATE')
             })
             .catch((error) => {
                 console.log('error ', error);
@@ -98,8 +123,18 @@ const Items = ({navigation}) => {
         setServerError(false);
         setItems([]);
         setRecords(0);
+        setPositionY(1000);
         clearSearchQuery();
         getItems();
+    };
+
+    const onScrollHandler = (e) => {
+        if (e.nativeEvent.contentOffset.y > positionY) {
+            setPositionY(positionY + 2000);
+            setTimeout(() => {
+                getChunk();
+            }, 1000);
+        }
     };
 
     const onChangeText = (text) => {
@@ -208,6 +243,8 @@ const Items = ({navigation}) => {
 
             <FlatList
                 data={items}
+                onScroll={onScrollHandler}
+
                 renderItem={({item}) => (
                     <Item
                         id={item.id}
@@ -218,6 +255,7 @@ const Items = ({navigation}) => {
                         pic={item.pic}
                         data={{item}}
                         navigation={navigation}
+                        key={item.id}
                     />
                 )}
                 keyExtractor={item => item.id}
