@@ -243,7 +243,7 @@ const Item = (item) => {
         fetch(state.url + 'api/items/add', {
             method: 'post',
             body: JSON.stringify({
-                id: +new Date,
+                id: (+new Date).toString(),
                 name: 'test from IOS',
                 pic,
                 category: 'test',
