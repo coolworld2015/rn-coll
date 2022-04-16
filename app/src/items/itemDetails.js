@@ -57,7 +57,7 @@ const PhoneDetails = () => {
 
             <ScrollView>
                 <View style={styles.form}>
-                    <View style={styles.itemWrap}>
+                    <View style={styles.picWrap}>
                         <Image
                             source={{uri: state.item.pic}}
                             resizeMode='stretch'
@@ -165,6 +165,8 @@ const styles = StyleSheet.create({
         marginRight: 40,
         fontWeight: 'bold',
         color: 'white',
+        flexWrap: 'wrap',
+        width: 200
     },
     form: {
         flex: 1,
@@ -176,9 +178,15 @@ const styles = StyleSheet.create({
     itemBlock: {
         flexDirection: 'row',
     },
-    itemWrap: {
+    picWrap: {
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    itemWrap: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
     },
     itemTextBold: {
         fontSize: 18,
@@ -219,7 +227,7 @@ const styles = StyleSheet.create({
     },
     img: {
         height: 300,
-        width: 270,
+        width: 300,
         borderRadius: 20,
         margin: 10,
     },

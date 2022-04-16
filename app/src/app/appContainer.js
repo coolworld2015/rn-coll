@@ -159,7 +159,7 @@ const AppContainer = () => {
 
                         if (route.name === 'Photos') {
                             iconName = <Image
-                                source={require('../../img/search.png')}
+                                source={require('../../img/favorite.png')}
                                 style={{
                                     height: 20,
                                     width: 20,
@@ -170,7 +170,7 @@ const AppContainer = () => {
                         if (route.name === 'Photos' && focused) {
                             iconName = <Image
 
-                                source={require('../../img/search.png')}
+                                source={require('../../img/favorite.png')}
                                 style={{
                                     height: 25,
                                     width: 25,
@@ -183,8 +183,8 @@ const AppContainer = () => {
                             iconName = <Image
                                 source={require('../../img/users.png')}
                                 style={{
-                                    height: 15,
-                                    width: 15,
+                                    height: 20,
+                                    width: 20,
                                     margin: 0,
                                 }}
                             />;
