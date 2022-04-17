@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
     StyleSheet,
     Text,
@@ -8,16 +8,60 @@ import {
     TouchableHighlight,
     TouchableWithoutFeedback,
     ScrollView,
-    Image
+    Image,
+    AsyncStorage
 } from 'react-native';
 
 import {useNavigation} from '@react-navigation/core';
 import {AppContext} from '../app/app';
-import Favorite from "./favorite";
 
-const FavoriteDetails = () => {
-    const {state} = useContext(AppContext);
+const PhoneDetails = () => {
+    const {state, setContextState} = useContext(AppContext);
     const navigation = useNavigation();
+    const [favorite, setFavorite] = useState(false);
+
+    useEffect(() => {
+        init();
+    }, []);
+
+    const like = favorite ? <Image style={styles.logo} source={require('../../img/like.png')}/> :
+        <Image style={styles.logo} source={require('../../img/like1.png')}/>;
+
+    const init = () => {
+        AsyncStorage.getItem('rn-coll.favorites')
+            .then(req => JSON.parse(req))
+            .then(data => {
+                setFavorite(data.includes(state.item.id))
+            })
+            .catch(error => console.log(error))
+    };
+
+    const setAsyncStorage = () => {
+
+        console.log('favorite - ', favorite.toString());
+        AsyncStorage.getItem('rn-coll.favorites')
+            .then(req => JSON.parse(req))
+            .then(data => {
+                console.log('data - ', data);
+                let favorites;
+                if (!favorite) {
+                    console.log('favorite - ', favorite.toString());
+                    favorites = data + (state.item.id) + ',';
+                } else {
+                    favorites = data.replace(state.item.id + ',', '');
+                }
+
+                console.log('favorites - ', favorites);
+                AsyncStorage.setItem('rn-coll.favorites', JSON.stringify(favorites))
+                    .then(() => {
+                            console.log('SET');
+                            setContextState({...state, ...{refresh: true}});
+                            favorite ? setFavorite(false) : setFavorite(true);
+                        }
+                    );
+            })
+            .catch(error => console.log(error))
+    };
 
     const goBack = () => {
         navigation.goBack();
@@ -47,12 +91,13 @@ const FavoriteDetails = () => {
                     </TouchableWithoutFeedback>
                 </View>
                 <View>
-                    <TouchableWithoutFeedback>
+                    <TouchableHighlight
+                        onPress={() => setAsyncStorage()}
+                        underlayColor='darkblue'>
                         <View>
-                            <Text style={styles.textSmall}>
-                            </Text>
+                            {like}
                         </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableHighlight>
                 </View>
             </View>
 
@@ -155,6 +200,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
         margin: 16,
+        marginTop: 22,
         fontWeight: 'bold',
         color: 'white',
     },
@@ -162,8 +208,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         margin: 10,
-        marginTop: 12,
-        marginRight: 40,
+        marginTop: 20,
+        marginRight: 30,
         fontWeight: 'bold',
         color: 'white',
         flexWrap: 'wrap',
@@ -232,6 +278,11 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         margin: 10,
     },
+    logo: {
+        height: 50,
+        width: 50,
+        margin: 10,
+    },
 });
 
-export default FavoriteDetails;
+export default PhoneDetails;

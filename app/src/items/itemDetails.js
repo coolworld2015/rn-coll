@@ -19,16 +19,15 @@ const PhoneDetails = () => {
     const {state, setContextState} = useContext(AppContext);
     const navigation = useNavigation();
     const [favorite, setFavorite] = useState(false);
-    const [link, setLink] = useState('../../img/like1.png');
 
     useEffect(() => {
         init();
     }, []);
 
-    const like = favorite ? <Image style={styles.logo} source={require('../../img/like.png')} /> : <Image style={styles.logo} source={require('../../img/like1.png')} />;
+    const like = favorite ? <Image style={styles.logo} source={require('../../img/like.png')}/> :
+        <Image style={styles.logo} source={require('../../img/like1.png')}/>;
 
     const init = () => {
-
         AsyncStorage.getItem('rn-coll.favorites')
             .then(req => JSON.parse(req))
             .then(data => {
@@ -38,28 +37,18 @@ const PhoneDetails = () => {
     };
 
     const setAsyncStorage = () => {
-        /*
-                this.favorite ? this.favorite = false : this.favorite = true;
-                if (this.favorite) {
-                    this.favorites = this.favorites + (this.form.id) + ',';
-                    localStorage.setItem('favorites', this.favorites);
-                } else {
-                    this.favorites = this.favorites.replace(this.form.id + ',', '');
-                    localStorage.setItem('favorites', this.favorites);
-                }*/
 
-
+        console.log('favorite - ', favorite.toString());
         AsyncStorage.getItem('rn-coll.favorites')
             .then(req => JSON.parse(req))
             .then(data => {
                 console.log('data - ', data);
                 let favorites;
-                if (favorite) {
+                if (!favorite) {
+                    console.log('favorite - ', favorite.toString());
                     favorites = data + (state.item.id) + ',';
-                    setFavorite(false)
                 } else {
                     favorites = data.replace(state.item.id + ',', '');
-                    setFavorite(true)
                 }
 
                 console.log('favorites - ', favorites);
@@ -67,6 +56,7 @@ const PhoneDetails = () => {
                     .then(() => {
                             console.log('SET');
                             setContextState({...state, ...{refresh: true}});
+                            favorite ? setFavorite(false) : setFavorite(true);
                         }
                     );
             })
@@ -291,7 +281,6 @@ const styles = StyleSheet.create({
     logo: {
         height: 50,
         width: 50,
-        //borderRadius: 20,
         margin: 10,
     },
 });
