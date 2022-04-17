@@ -41,7 +41,6 @@ const Favorite = ({navigation}) => {
     const getItems = () => {
         setShowProgress(true);
         setServerError(false);
-        getAsyncStorage();
 
         AsyncStorage.getItem('rn-coll.favorites')
             .then(req => JSON.parse(req))
@@ -51,7 +50,7 @@ const Favorite = ({navigation}) => {
                 fetch(state.url + 'api/favorites/post', {
                     method: 'post',
                     body: JSON.stringify({
-                        favorites: data.join()
+                        favorites: data
                     }),
                     headers: {
                         'Accept': 'application/json',
@@ -72,8 +71,6 @@ const Favorite = ({navigation}) => {
                     });
             })
             .catch(error => console.log(error))
-
-
     };
 
     const sort = (a, b) => {
@@ -114,13 +111,12 @@ const Favorite = ({navigation}) => {
                 }
             );*/
 
-        AsyncStorage.getItem('rn-coll.favorites')
+/*        AsyncStorage.getItem('rn-coll.favorites')
             .then(req => JSON.parse(req))
             .then(data => {
-                setFavorites(data);
                 console.log(data);
             })
-            .catch(error => console.log(error))
+            .catch(error => console.log(error))*/
     };
 
     const onChangeText = (text) => {

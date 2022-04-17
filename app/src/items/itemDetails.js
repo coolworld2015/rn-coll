@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
     StyleSheet,
     Text,
@@ -8,15 +8,70 @@ import {
     TouchableHighlight,
     TouchableWithoutFeedback,
     ScrollView,
-    Image
+    Image,
+    AsyncStorage
 } from 'react-native';
 
 import {useNavigation} from '@react-navigation/core';
 import {AppContext} from '../app/app';
 
 const PhoneDetails = () => {
-    const {state} = useContext(AppContext);
+    const {state, setContextState} = useContext(AppContext);
     const navigation = useNavigation();
+    const [favorite, setFavorite] = useState(false);
+    const [link, setLink] = useState('../../img/like1.png');
+
+    useEffect(() => {
+        init();
+    }, []);
+
+    const like = favorite ? <Image style={styles.logo} source={require('../../img/like.png')} /> : <Image style={styles.logo} source={require('../../img/like1.png')} />;
+
+    const init = () => {
+
+        AsyncStorage.getItem('rn-coll.favorites')
+            .then(req => JSON.parse(req))
+            .then(data => {
+                setFavorite(data.includes(state.item.id))
+            })
+            .catch(error => console.log(error))
+    };
+
+    const setAsyncStorage = () => {
+        /*
+                this.favorite ? this.favorite = false : this.favorite = true;
+                if (this.favorite) {
+                    this.favorites = this.favorites + (this.form.id) + ',';
+                    localStorage.setItem('favorites', this.favorites);
+                } else {
+                    this.favorites = this.favorites.replace(this.form.id + ',', '');
+                    localStorage.setItem('favorites', this.favorites);
+                }*/
+
+
+        AsyncStorage.getItem('rn-coll.favorites')
+            .then(req => JSON.parse(req))
+            .then(data => {
+                console.log('data - ', data);
+                let favorites;
+                if (favorite) {
+                    favorites = data + (state.item.id) + ',';
+                    setFavorite(false)
+                } else {
+                    favorites = data.replace(state.item.id + ',', '');
+                    setFavorite(true)
+                }
+
+                console.log('favorites - ', favorites);
+                AsyncStorage.setItem('rn-coll.favorites', JSON.stringify(favorites))
+                    .then(() => {
+                            console.log('SET');
+                            setContextState({...state, ...{refresh: true}});
+                        }
+                    );
+            })
+            .catch(error => console.log(error))
+    };
 
     const goBack = () => {
         navigation.goBack();
@@ -46,12 +101,13 @@ const PhoneDetails = () => {
                     </TouchableWithoutFeedback>
                 </View>
                 <View>
-                    <TouchableWithoutFeedback>
+                    <TouchableHighlight
+                        onPress={() => setAsyncStorage()}
+                        underlayColor='darkblue'>
                         <View>
-                            <Text style={styles.textSmall}>
-                            </Text>
+                            {like}
                         </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableHighlight>
                 </View>
             </View>
 
@@ -154,6 +210,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
         margin: 16,
+        marginTop: 22,
         fontWeight: 'bold',
         color: 'white',
     },
@@ -161,8 +218,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         margin: 10,
-        marginTop: 12,
-        marginRight: 40,
+        marginTop: 20,
+        marginRight: 30,
         fontWeight: 'bold',
         color: 'white',
         flexWrap: 'wrap',
@@ -229,6 +286,12 @@ const styles = StyleSheet.create({
         height: 300,
         width: 300,
         borderRadius: 20,
+        margin: 10,
+    },
+    logo: {
+        height: 50,
+        width: 50,
+        //borderRadius: 20,
         margin: 10,
     },
 });
