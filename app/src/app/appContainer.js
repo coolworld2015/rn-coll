@@ -15,6 +15,9 @@ import {AppContext} from './app';
 import Items from '../items/items';
 import ItemDetails from '../items/itemDetails';
 
+import Favorite from '../favorite/favorite';
+import FavoriteDetails from '../favorite/favoriteDetails';
+
 import Photos from '../photos/photos';
 
 import Users from '../users/users';
@@ -49,6 +52,17 @@ const ItemsStackScreen = () => {
             <ItemsStack.Screen name="Items" component={Items} options={{title: ''}}/>
             <ItemsStack.Screen name="Details" component={ItemDetails} options={{title: '', headerLeft: null}}/>
         </ItemsStack.Navigator>
+    );
+};
+
+const FavoriteStack = createStackNavigator();
+
+const FavoriteStackScreen = () => {
+    return (
+        <FavoriteStack.Navigator headerMode={'none'}>
+            <FavoriteStack.Screen name="Favorite" component={Favorite} options={{title: ''}}/>
+            <FavoriteStack.Screen name="Details" component={FavoriteDetails} options={{title: '', headerLeft: null}}/>
+        </FavoriteStack.Navigator>
     );
 };
 
@@ -136,9 +150,9 @@ const AppContainer = () => {
                     tabBarIcon: ({focused, color, size}) => {
                         let iconName;
 
-                        if (route.name === 'Items') {
+                        if (route.name === 'Collection') {
                             iconName = <Image
-                                source={require('../../img/images.png')}
+                                source={require('../../img/logo.jpg')}
                                 style={{
                                     height: 20,
                                     width: 20,
@@ -146,9 +160,9 @@ const AppContainer = () => {
                                 }}
                             />;
                         }
-                        if (route.name === 'Items' && focused) {
+                        if (route.name === 'Collection' && focused) {
                             iconName = <Image
-                                source={require('../../img/images.png')}
+                                source={require('../../img/logo.jpg')}
                                 style={{
                                     height: 30,
                                     width: 30,
@@ -157,9 +171,31 @@ const AppContainer = () => {
                             />;
                         }
 
-                        if (route.name === 'Photos') {
+                        if (route.name === 'Favorite') {
                             iconName = <Image
                                 source={require('../../img/favorite.png')}
+                                style={{
+                                    height: 20,
+                                    width: 20,
+                                    margin: 0,
+                                }}
+                            />;
+                        }
+                        if (route.name === 'Favorite' && focused) {
+                            iconName = <Image
+
+                                source={require('../../img/favorite.png')}
+                                style={{
+                                    height: 25,
+                                    width: 25,
+                                    margin: 0,
+                                }}
+                            />;
+                        }
+
+                        if (route.name === 'Photos') {
+                            iconName = <Image
+                                source={require('../../img/images.png')}
                                 style={{
                                     height: 20,
                                     width: 20,
@@ -170,7 +206,7 @@ const AppContainer = () => {
                         if (route.name === 'Photos' && focused) {
                             iconName = <Image
 
-                                source={require('../../img/favorite.png')}
+                                source={require('../../img/images.png')}
                                 style={{
                                     height: 25,
                                     width: 25,
@@ -235,7 +271,8 @@ const AppContainer = () => {
                     },
                 })}
             >
-                <Tab.Screen name="Items" component={ItemsStackScreen}/>
+                <Tab.Screen name="Collection" component={ItemsStackScreen}/>
+                <Tab.Screen name="Favorite" component={FavoriteStackScreen}/>
                 <Tab.Screen name="Photos" component={PhotosStackScreen}/>
                 <Tab.Screen name={name} component={UsersStackScreen}/>
                 <Tab.Screen name="Audit" component={AuditStackScreen}/>

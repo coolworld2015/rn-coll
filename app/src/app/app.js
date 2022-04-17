@@ -7,9 +7,8 @@ import Login from './login';
 import AppContainer from './appContainer';
 
 const initialState = {
-    url: 'https://gredunov.herokuapp.com/',
-    //url: 'http://localhost:3000/',
-    //url: 'https://jwt-base09.herokuapp.com/',
+    //url: 'https://gredunov.herokuapp.com/',
+    url: 'http://localhost:3000/',
     isLoggedIn: false,
     item: {},
 };

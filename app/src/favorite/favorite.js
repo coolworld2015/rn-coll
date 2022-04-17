@@ -16,7 +16,7 @@ import {
 import {AppContext} from '../app/app';
 import Item from './item';
 
-const Items = ({navigation}) => {
+const Favorite = ({navigation}) => {
     const {state} = useContext(AppContext);
 
     const [items, setItems] = useState([]);
@@ -42,67 +42,19 @@ const Items = ({navigation}) => {
         setShowProgress(true);
         setServerError(false);
 
-        fetch(state.url + 'api/pic/get', {
-            method: 'get',
+        fetch(state.url + 'api/favorites/post', {
+            method: 'post',
+            body: JSON.stringify({
+                favorites: '6973,',
+            }),
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': state.token,
-            },
+                'Content-Type': 'application/json'
+            }
         })
             .then((response) => response.json())
             .then(items => {
-                setItems(items.sort(sort));
-                setFilteredItems(items.slice(0, 20));
-                setRecords(items.length);
-                setShowProgress(false);
-                setTimeout(() => {
-                    //getItemsAll();
-                }, 100)
-            })
-            .catch((error) => {
-                console.log('error ', error);
-                setShowProgress(false);
-                setServerError(true);
-            });
-    };
-
-    const getChunk = () => {
-        fetch(state.url + 'api/items/chunk/' + records, {
-            method: 'get',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': state.token,
-            },
-        })
-            .then((response) => response.json())
-            .then(data => {
-                setItems(items.concat(data));
-                setFilteredItems(items.concat(data));
-                setRecords(items.length + 20);
-                setShowProgress(false);
-                console.log('UPDATE')
-            })
-            .catch((error) => {
-                console.log('error ', error);
-                setShowProgress(false);
-                setServerError(true);
-            });
-    };
-
-    const getItemsAll = () => {
-        fetch(item.url + 'api/pic/getall', {
-            method: 'get',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': state.token,
-            },
-        })
-            .then((response) => response.json())
-            .then(items => {
-                setItems(items.sort(sort));
+                setItems(items);
                 setFilteredItems(items);
                 setRecords(items.length);
                 setShowProgress(false);
@@ -139,7 +91,7 @@ const Items = ({navigation}) => {
         if (e.nativeEvent.contentOffset.y > positionY) {
             setPositionY(positionY + 2000);
             setTimeout(() => {
-                getChunk();
+                //getChunk();
             }, 1000);
         }
     };
@@ -205,7 +157,7 @@ const Items = ({navigation}) => {
                     <TouchableWithoutFeedback>
                         <View>
                             <Text style={styles.textLarge}>
-                                Collection
+                                Favorite
                             </Text>
                         </View>
                     </TouchableWithoutFeedback>
@@ -377,4 +329,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Items;
+export default Favorite;
