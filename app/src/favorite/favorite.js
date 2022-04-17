@@ -10,7 +10,7 @@ import {
     ActivityIndicator,
     TextInput,
     Image,
-    Dimensions, FlatList, RefreshControl,
+    Dimensions, FlatList, RefreshControl, AsyncStorage
 } from 'react-native';
 
 import {AppContext} from '../app/app';
@@ -41,29 +41,39 @@ const Favorite = ({navigation}) => {
     const getItems = () => {
         setShowProgress(true);
         setServerError(false);
+        getAsyncStorage();
 
-        fetch(state.url + 'api/favorites/post', {
-            method: 'post',
-            body: JSON.stringify({
-                favorites: '6973,',
-            }),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-            .then((response) => response.json())
-            .then(items => {
-                setItems(items);
-                setFilteredItems(items);
-                setRecords(items.length);
-                setShowProgress(false);
+        AsyncStorage.getItem('rn-coll.favorites')
+            .then(req => JSON.parse(req))
+            .then(data => {
+                console.log(data);
+
+                fetch(state.url + 'api/favorites/post', {
+                    method: 'post',
+                    body: JSON.stringify({
+                        favorites: data.join()
+                    }),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then((response) => response.json())
+                    .then(items => {
+                        setItems(items);
+                        setFilteredItems(items);
+                        setRecords(items.length);
+                        setShowProgress(false);
+                    })
+                    .catch((error) => {
+                        console.log('error ', error);
+                        setShowProgress(false);
+                        setServerError(true);
+                    });
             })
-            .catch((error) => {
-                console.log('error ', error);
-                setShowProgress(false);
-                setServerError(true);
-            });
+            .catch(error => console.log(error))
+
+
     };
 
     const sort = (a, b) => {
@@ -94,6 +104,23 @@ const Favorite = ({navigation}) => {
                 //getChunk();
             }, 1000);
         }
+    };
+
+    const getAsyncStorage = () => {
+/*        const favorites = ['6973', '6964',];
+        AsyncStorage.setItem('rn-coll.favorites', JSON.stringify(favorites),)
+            .then(() => {
+                console.log('SET')
+                }
+            );*/
+
+        AsyncStorage.getItem('rn-coll.favorites')
+            .then(req => JSON.parse(req))
+            .then(data => {
+                setFavorites(data);
+                console.log(data);
+            })
+            .catch(error => console.log(error))
     };
 
     const onChangeText = (text) => {
