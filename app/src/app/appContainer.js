@@ -171,7 +171,7 @@ const AppContainer = () => {
                             />;
                         }
 
-                        if (route.name === 'Favorite') {
+                        if (route.name === 'Favorites') {
                             iconName = <Image
                                 source={require('../../img/favorite.png')}
                                 style={{
@@ -181,7 +181,7 @@ const AppContainer = () => {
                                 }}
                             />;
                         }
-                        if (route.name === 'Favorite' && focused) {
+                        if (route.name === 'Favorites' && focused) {
                             iconName = <Image
 
                                 source={require('../../img/favorite.png')}
@@ -272,7 +272,7 @@ const AppContainer = () => {
                 })}
             >
                 <Tab.Screen name="Collection" component={ItemsStackScreen}/>
-                <Tab.Screen name="Favorite" component={FavoriteStackScreen}/>
+                <Tab.Screen name="Favorites" component={FavoriteStackScreen}/>
                 <Tab.Screen name="Photos" component={PhotosStackScreen}/>
                 <Tab.Screen name={name} component={UsersStackScreen}/>
                 <Tab.Screen name="Audit" component={AuditStackScreen}/>

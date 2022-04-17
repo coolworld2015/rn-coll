@@ -15,7 +15,7 @@ import {
 import {useNavigation} from '@react-navigation/core';
 import {AppContext} from '../app/app';
 
-const PhoneDetails = () => {
+const ItemDetails = () => {
     const {state, setContextState} = useContext(AppContext);
     const navigation = useNavigation();
     const [favorite, setFavorite] = useState(false);
@@ -37,24 +37,18 @@ const PhoneDetails = () => {
     };
 
     const setAsyncStorage = () => {
-
-        console.log('favorite - ', favorite.toString());
         AsyncStorage.getItem('rn-coll.favorites')
             .then(req => JSON.parse(req))
             .then(data => {
-                console.log('data - ', data);
                 let favorites;
                 if (!favorite) {
-                    console.log('favorite - ', favorite.toString());
                     favorites = data + (state.item.id) + ',';
                 } else {
                     favorites = data.replace(state.item.id + ',', '');
                 }
 
-                console.log('favorites - ', favorites);
                 AsyncStorage.setItem('rn-coll.favorites', JSON.stringify(favorites))
                     .then(() => {
-                            console.log('SET');
                             setContextState({...state, ...{refresh: true}});
                             favorite ? setFavorite(false) : setFavorite(true);
                         }
@@ -285,4 +279,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default PhoneDetails;
+export default ItemDetails;

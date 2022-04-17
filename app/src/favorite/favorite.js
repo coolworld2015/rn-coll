@@ -103,22 +103,6 @@ const Favorite = ({navigation}) => {
         }
     };
 
-    const getAsyncStorage = () => {
-/*        const favorites = ['6973', '6964',];
-        AsyncStorage.setItem('rn-coll.favorites', JSON.stringify(favorites),)
-            .then(() => {
-                console.log('SET')
-                }
-            );*/
-
-/*        AsyncStorage.getItem('rn-coll.favorites')
-            .then(req => JSON.parse(req))
-            .then(data => {
-                console.log(data);
-            })
-            .catch(error => console.log(error))*/
-    };
-
     const onChangeText = (text) => {
         let arr = [].concat(filteredItems);
 
@@ -169,10 +153,6 @@ const Favorite = ({navigation}) => {
                 <View>
                     <TouchableWithoutFeedback>
                         <View>
-                            <Image
-                                style={styles.menu}
-                                source={require('../../img/menu.png')}
-                            />
                         </View>
                     </TouchableWithoutFeedback>
                 </View>
@@ -180,7 +160,7 @@ const Favorite = ({navigation}) => {
                     <TouchableWithoutFeedback>
                         <View>
                             <Text style={styles.textLarge}>
-                                Favorite
+                                Favorites
                             </Text>
                         </View>
                     </TouchableWithoutFeedback>
@@ -191,7 +171,6 @@ const Favorite = ({navigation}) => {
                         underlayColor='darkblue'>
                         <View>
                             <Text style={styles.textSmall}>
-                                New
                             </Text>
                         </View>
                     </TouchableHighlight>
@@ -314,7 +293,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         marginTop: 12,
-        paddingLeft: 20,
+        paddingLeft: 30,
         fontWeight: 'bold',
         color: 'white',
     },

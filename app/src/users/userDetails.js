@@ -174,13 +174,6 @@ const UserDetails = () => {
             <ScrollView>
                 <View style={styles.form}>
                     <TextInput
-                        style={styles.formInputBold}
-                        value={state.item.id.toString()}
-                        editable={false}
-                        placeholder="ID">
-                    </TextInput>
-
-                    <TextInput
                         onChangeText={(text) => {
                             setName(text);
                             setInvalidValue(false)

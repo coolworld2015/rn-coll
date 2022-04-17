@@ -134,10 +134,6 @@ const Photos = ({navigation}) => {
                 <View>
                     <TouchableWithoutFeedback>
                         <View>
-                            <Image
-                                style={styles.menu}
-                                source={require('../../img/menu.png')}
-                            />
                         </View>
                     </TouchableWithoutFeedback>
                 </View>
@@ -155,9 +151,6 @@ const Photos = ({navigation}) => {
                         onPress={() => true}
                         underlayColor='darkblue'>
                         <View>
-                            <Text style={styles.textSmall}>
-                                New
-                            </Text>
                         </View>
                     </TouchableHighlight>
                 </View>
@@ -362,7 +355,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10,
         marginTop: 12,
-        paddingLeft: 20,
+        paddingLeft: 0,
         fontWeight: 'bold',
         color: 'white',
     },

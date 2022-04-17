@@ -56,9 +56,6 @@ const Items = ({navigation}) => {
                 setFilteredItems(items.slice(0, 20));
                 setRecords(items.length);
                 setShowProgress(false);
-                setTimeout(() => {
-                    //getItemsAll();
-                }, 100)
             })
             .catch((error) => {
                 console.log('error ', error);
@@ -68,6 +65,7 @@ const Items = ({navigation}) => {
     };
 
     const getChunk = () => {
+        console.log('SEND');
         fetch(state.url + 'api/items/chunk/' + records, {
             method: 'get',
             headers: {
@@ -83,29 +81,6 @@ const Items = ({navigation}) => {
                 setRecords(items.length + 20);
                 setShowProgress(false);
                 console.log('UPDATE')
-            })
-            .catch((error) => {
-                console.log('error ', error);
-                setShowProgress(false);
-                setServerError(true);
-            });
-    };
-
-    const getItemsAll = () => {
-        fetch(item.url + 'api/pic/getall', {
-            method: 'get',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': state.token,
-            },
-        })
-            .then((response) => response.json())
-            .then(items => {
-                setItems(items.sort(sort));
-                setFilteredItems(items);
-                setRecords(items.length);
-                setShowProgress(false);
             })
             .catch((error) => {
                 console.log('error ', error);
@@ -137,7 +112,7 @@ const Items = ({navigation}) => {
 
     const onScrollHandler = (e) => {
         if (e.nativeEvent.contentOffset.y > positionY) {
-            setPositionY(positionY + 2000);
+            setPositionY(positionY + 1500);
             setTimeout(() => {
                 getChunk();
             }, 1000);
@@ -151,6 +126,33 @@ const Items = ({navigation}) => {
         setItems(filteredItems1);
         setRecords(filteredItems1.length);
         setSearchQuery(text);
+    };
+
+    const onSearch = () => {
+        setShowProgress(true);
+        setServerError(false);
+        setItems([]);
+        console.log('search ', searchQuery);
+        fetch(state.url + 'api/items/findByName/' + searchQuery, {
+            method: 'get',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': state.token,
+            },
+        })
+            .then((response) => response.json())
+            .then(items => {
+                setItems(items.sort(sort));
+                setFilteredItems(items.sort(sort));
+                setRecords(items.length);
+                setShowProgress(false);
+            })
+            .catch((error) => {
+                console.log('error ', error);
+                setShowProgress(false);
+                setServerError(true);
+            });
     };
 
     const clearSearchQuery = () => {
@@ -212,11 +214,11 @@ const Items = ({navigation}) => {
                 </View>
                 <View>
                     <TouchableHighlight
-                        onPress={() => true}
+                        onPress={() => onSearch()}
                         underlayColor='darkblue'>
                         <View>
                             <Text style={styles.textSmall}>
-                                New
+                                Search
                             </Text>
                         </View>
                     </TouchableHighlight>

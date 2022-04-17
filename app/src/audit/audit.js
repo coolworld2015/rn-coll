@@ -68,6 +68,7 @@ const Audit = ({navigation}) => {
         setServerError(false);
         setItems([]);
         setRecords(0);
+        clearSearchQuery();
         getItems();
     };
 
