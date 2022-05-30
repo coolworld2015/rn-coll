@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, TouchableHighlight, Text, StyleSheet} from 'react-native';
+import {View, TouchableHighlight, Text, Button, Dimensions, StyleSheet} from 'react-native';
 
 const Test = () => {
     const [clicked, setClicked] = useState(false);
@@ -13,7 +13,7 @@ const Test = () => {
             <TouchableHighlight
                 onPress={() => handler()}
                 style={{
-                    marginTop: '50%',
+                    marginTop: Dimensions.get('window').height * .35,
                     marginLeft: '30%',
                     borderRadius: 100,
                     width: 200,
@@ -24,6 +24,7 @@ const Test = () => {
                     Button
                 </Text>
             </TouchableHighlight>
+            <Button title="Learn More"/>
         </View>
     )
 };
