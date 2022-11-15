@@ -15,6 +15,7 @@ import {
     View,
     Platform,
     PermissionsAndroid,
+    Alert
 } from 'react-native';
 
 import {AppConfig, AppContext} from '../app/app';
@@ -23,7 +24,7 @@ import CameraRoll from '@react-native-community/cameraroll';
 import RNFS from 'react-native-fs';
 
 const Photos = ({navigation}) => {
-    //const {dispatch} = useContext(AppConfig);
+    const {state, setContextState} = useContext(AppContext);
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [records, setRecords] = useState(0);
@@ -66,8 +67,7 @@ const Photos = ({navigation}) => {
                 setFilteredItems(items.edges);
                 setRecords(items.edges.length);
                 setShowProgress(false);
-
-
+                setContextState({...state, ...{setShowProgress}});
             })
             .catch((err) => {
                 console.log('error ', error);
@@ -232,6 +232,22 @@ const Item = (item) => {
     const {state, setContextState} = useContext(AppContext);
     const navigation = useNavigation();
 
+    const addItemDialog = (pic, name) => {
+        Alert.alert(
+            'Add pictures',
+            'Are you sure you want to add ' + name + '?',
+            [
+                {text: 'Cancel', onPress: () => console.log('Cancel')},
+                {
+                    text: 'OK', onPress: () => {
+                        state.setShowProgress(true);
+                        addItem(pic);
+                    }
+                },
+            ]
+        );
+    };
+
     const addItem = (pic) => {
         fetch(state.url + 'api/items/add', {
             method: 'post',
@@ -277,10 +293,10 @@ const Item = (item) => {
                         .then(data => {
                             RNFS.readFile(data, 'base64')
                                 .then(base64 => {
-
-                                    console.log('data:image/png;base64,', base64);
+                                    //console.log('data:image/png;base64,', base64);
                                     const pic = 'data:image/png;base64,' + base64;
-                                    addItem(pic)
+                                    const name = timeConverter(item.name);
+                                    addItemDialog(pic, name)
                                 });
                         });
                 }
