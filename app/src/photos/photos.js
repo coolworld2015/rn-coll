@@ -67,7 +67,7 @@ const Photos = ({navigation}) => {
                 setFilteredItems(items.edges);
                 setRecords(items.edges.length);
                 setShowProgress(false);
-                setContextState({...state, ...{setShowProgress}});
+                setContextState({...state, ...{setShowProgress, setServerError}});
             })
             .catch((err) => {
                 console.log('error ', error);
@@ -272,10 +272,10 @@ const Item = (item) => {
             })
             .catch((error) => {
                 console.log('error ', error);
-                setServerError(true);
+                state.setServerError(true);
             })
             .finally(() => {
-                setShowProgress(false);
+                state.setShowProgress(false);
             });
     };
 
