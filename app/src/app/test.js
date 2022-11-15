@@ -21,10 +21,10 @@ const Test = () => {
                     backgroundColor: clicked === true ? 'red' : 'blue',
                 }}>
                 <Text style={{marginTop: '43%', marginLeft: '30%', color: 'white', fontSize: 24, fontWeight: 'bold',}}>
-                    Button TEST
+                    Button
                 </Text>
             </TouchableHighlight>
-            <Button title="Learn More"/>
+           {/* <Button title="Learn More"/>*/}
         </View>
     )
 };
